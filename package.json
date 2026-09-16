@@ -1,0 +1,16 @@
+{
+  "name": "giftnest",
+  "version": "1.0.0",
+  "description": "GiftNest — Gifting Store + Admin CMS (Full MERN Stack)",
+  "scripts": {
+    "server": "cd server && npm start",
+    "server:dev": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
+    "client:build": "cd client && npm run build",
+    "seed": "cd server && npm run seed",
+    "test:api": "node test_api.js"
+  },
+  "keywords": ["mern", "react", "express", "mongodb", "tailwind", "ecommerce", "admin-cms"],
+  "author": "GiftNest Developer",
+  "license": "ISC"
+}
