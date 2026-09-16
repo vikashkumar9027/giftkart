@@ -11,6 +11,7 @@ import {
   LogOut,
   Gift,
   X,
+  Truck,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -23,6 +24,7 @@ const AdminSidebar = ({ mobileOpen, setMobileOpen }) => {
     { name: 'Products', path: '/admin/products', icon: Package },
     { name: 'Categories', path: '/admin/categories', icon: FolderTree },
     { name: 'Orders', path: '/admin/orders', icon: ShoppingBag },
+    { name: 'Delivery Ops', path: '/admin/delivery', icon: Truck },
     { name: 'Gallery CMS', path: '/admin/gallery', icon: ImageIcon },
     { name: 'Banners & Offers', path: '/admin/banners', icon: Sliders },
   ];

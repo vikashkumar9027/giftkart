@@ -71,32 +71,73 @@ const CartPage = () => {
         {/* Left Col: Cart Items list */}
         <div className="lg:col-span-2 space-y-4">
           {cartItems.map((item) => {
+            const itemKey = item.cartItemId || item.product;
             const isMaxStock = item.quantity >= item.stock;
+            const itemPackagingPrice = Number(item.packaging?.price) || 0;
+            const itemEffectivePrice = item.price + itemPackagingPrice;
 
             return (
               <div
-                key={item.product}
+                key={itemKey}
                 className="bg-white rounded-3xl p-5 border border-stone-200 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-5 transition-all"
               >
-                {/* Product Image & Title */}
-                <div className="flex items-center space-x-4 w-full sm:w-auto">
-                  <div className="w-20 h-20 rounded-2xl overflow-hidden bg-stone-100 shrink-0 border border-stone-100">
+                {/* Product Image & Title & Customizations */}
+                <div className="flex items-start space-x-4 w-full sm:w-auto">
+                  <div className="w-20 h-20 rounded-2xl overflow-hidden bg-stone-100 shrink-0 border border-stone-100 relative">
                     <img
                       src={item.image}
                       alt={item.name}
                       className="w-full h-full object-cover"
                     />
+                    {item.customization?.customPhotoUrl && (
+                      <img
+                        src={item.customization.customPhotoUrl}
+                        alt="Photo Plaque"
+                        className="w-7 h-7 rounded-full border-2 border-white absolute bottom-1 right-1 object-cover shadow-sm"
+                        title="Personalized photo plaque attached"
+                      />
+                    )}
                   </div>
-                  <div>
+                  <div className="space-y-1">
                     <Link
                       to={`/product/${item.product}`}
                       className="text-sm font-bold text-stone-900 hover:text-rose-600 transition-colors line-clamp-1 font-serif"
                     >
                       {item.name}
                     </Link>
-                    <p className="text-xs text-stone-400 mt-0.5">
+                    <p className="text-xs text-stone-400">
                       Unit Price: {formatCurrency(item.price)}
+                      {itemPackagingPrice > 0 && ` + ${formatCurrency(itemPackagingPrice)} packaging`}
                     </p>
+
+                    {/* Custom Engraving & Recipient Badges */}
+                    {(item.customization?.customText || item.customization?.recipientName) && (
+                      <div className="flex flex-wrap gap-1 pt-0.5">
+                        {item.customization.customText && (
+                          <span className="text-[10px] font-bold bg-rose-50 text-rose-700 px-2 py-0.5 rounded-md border border-rose-100">
+                            ✎ Engraving: "{item.customization.customText}"
+                          </span>
+                        )}
+                        {item.customization.recipientName && (
+                          <span className="text-[10px] font-medium bg-stone-100 text-stone-700 px-2 py-0.5 rounded-md">
+                            For: {item.customization.recipientName}
+                          </span>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Packaging Style Badge */}
+                    {item.packaging?.name && (
+                      <div className="text-[10px] text-amber-800 font-semibold flex items-center space-x-1">
+                        <span>📦 {item.packaging.name}</span>
+                        {item.packaging.ribbonColor && (
+                          <span className="text-stone-500 font-normal">
+                            ({item.packaging.ribbonColor})
+                          </span>
+                        )}
+                      </div>
+                    )}
+
                     {isMaxStock && (
                       <span className="text-[10px] text-amber-600 font-semibold block mt-1">
                         Max available stock limit ({item.stock})
@@ -110,7 +151,7 @@ const CartPage = () => {
                   {/* Quantity +- */}
                   <div className="flex items-center border border-stone-200 rounded-2xl bg-stone-50 p-1">
                     <button
-                      onClick={() => updateQuantity(item.product, item.quantity - 1)}
+                      onClick={() => updateQuantity(itemKey, item.quantity - 1)}
                       disabled={item.quantity <= 1}
                       className="p-1.5 text-stone-600 hover:text-stone-900 disabled:opacity-30 transition-colors"
                     >
@@ -120,7 +161,7 @@ const CartPage = () => {
                       {item.quantity}
                     </span>
                     <button
-                      onClick={() => updateQuantity(item.product, item.quantity + 1)}
+                      onClick={() => updateQuantity(itemKey, item.quantity + 1)}
                       disabled={isMaxStock}
                       className="p-1.5 text-stone-600 hover:text-stone-900 disabled:opacity-30 transition-colors"
                     >
@@ -130,12 +171,12 @@ const CartPage = () => {
 
                   {/* Subtotal for this product */}
                   <span className="text-sm font-bold text-stone-900 min-w-[70px] text-right">
-                    {formatCurrency(item.price * item.quantity)}
+                    {formatCurrency(itemEffectivePrice * item.quantity)}
                   </span>
 
                   {/* Delete Item */}
                   <button
-                    onClick={() => removeFromCart(item.product)}
+                    onClick={() => removeFromCart(itemKey)}
                     className="p-2 text-stone-400 hover:text-rose-600 transition-colors rounded-lg hover:bg-stone-100"
                     title="Remove item"
                   >

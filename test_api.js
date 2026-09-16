@@ -171,6 +171,86 @@ const testSuite = async () => {
       });
     }
 
+    console.log('\n--- 9. Public Courier Tracking & Masked Privacy ---');
+    const publicTrackRes = await fetch(`${baseURL}/orders/track/FED-1029-482019`).then((r) => r.json());
+    assert(
+      publicTrackRes.success &&
+        publicTrackRes.order.deliveryDetails.trackingNumber === 'FED-1029-482019' &&
+        publicTrackRes.order.deliveryAddress.pincode.includes('***') &&
+        !publicTrackRes.order.deliveryAddress.address,
+      'GET /api/orders/track/FED-1029-482019 returns tracking details with masked pincode and hidden street address'
+    );
+
+    console.log('\n--- 10. Admin Delivery Operations & Milestone Logging ---');
+    const updateDeliveryRes = await fetch(`${baseURL}/orders/${createdOrderId}/delivery`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${adminToken}`,
+      },
+      body: JSON.stringify({
+        carrierName: 'DHL Express',
+        trackingNumber: `DHL-${Date.now()}`,
+        deliveryAgent: { name: 'Carlos Gomez', phone: '+1 (555) 302-8819' },
+        estimatedDelivery: new Date(Date.now() + 3 * 86400000).toISOString(),
+        status: 'Shipped',
+      }),
+    }).then((r) => r.json());
+    assert(
+      updateDeliveryRes.success && updateDeliveryRes.order.deliveryDetails.carrierName === 'DHL Express',
+      'PATCH /api/orders/:id/delivery assigns courier carrier and updates status'
+    );
+
+    const addMilestoneRes = await fetch(`${baseURL}/orders/${createdOrderId}/timeline`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${adminToken}`,
+      },
+      body: JSON.stringify({
+        status: 'Shipped',
+        title: 'Package Arrived at Local Facility',
+        description: 'Sorting in progress for final route.',
+        location: 'Downtown Distribution Center',
+      }),
+    }).then((r) => r.json());
+    assert(
+      addMilestoneRes.success && addMilestoneRes.timeline.length > 0,
+      'POST /api/orders/:id/timeline appends custom courier milestone event'
+    );
+
+    console.log('\n--- 11. Payment Gateway Simulation & Admin Management ---');
+    const payRes = await fetch(`${baseURL}/orders/${createdOrderId}/pay`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${customerToken}`,
+      },
+      body: JSON.stringify({
+        method: 'upi',
+        details: { vpa: 'tester@okhdfcbank' },
+      }),
+    }).then((r) => r.json());
+    assert(
+      payRes.success && payRes.order.paymentInfo.status === 'Paid' && !!payRes.order.paymentInfo.transactionId,
+      'POST /api/orders/:id/pay simulates successful payment and generates transaction ID'
+    );
+
+    const adminPaymentRes = await fetch(`${baseURL}/orders/${createdOrderId}/payment`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${adminToken}`,
+      },
+      body: JSON.stringify({
+        status: 'Refunded',
+      }),
+    }).then((r) => r.json());
+    assert(
+      adminPaymentRes.success && adminPaymentRes.order.paymentInfo.status === 'Refunded',
+      'PATCH /api/orders/:id/payment allows admin to update payment status to "Refunded"'
+    );
+
     console.log(`\n========================================`);
     console.log(`TEST SUMMARY: ${passed} PASSED, ${failed} FAILED`);
     console.log(`========================================\n`);

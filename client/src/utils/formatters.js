@@ -42,6 +42,8 @@ export const getStatusBadgeClass = (status) => {
       return 'bg-indigo-100 text-indigo-800 border-indigo-300';
     case 'Shipped':
       return 'bg-purple-100 text-purple-800 border-purple-300';
+    case 'Out for Delivery':
+      return 'bg-cyan-100 text-cyan-800 border-cyan-300';
     case 'Delivered':
       return 'bg-emerald-100 text-emerald-800 border-emerald-300';
     case 'Cancelled':
@@ -50,3 +52,20 @@ export const getStatusBadgeClass = (status) => {
       return 'bg-stone-100 text-stone-800 border-stone-300';
   }
 };
+
+// Payment status styling dictionary
+export const getPaymentBadgeClass = (status) => {
+  switch (status) {
+    case 'Paid':
+      return 'bg-emerald-100 text-emerald-800 border-emerald-300';
+    case 'Pending':
+      return 'bg-amber-100 text-amber-800 border-amber-300';
+    case 'Failed':
+      return 'bg-rose-100 text-rose-800 border-rose-300';
+    case 'Refunded':
+      return 'bg-purple-100 text-purple-800 border-purple-300';
+    default:
+      return 'bg-stone-100 text-stone-800 border-stone-300';
+  }
+};
+

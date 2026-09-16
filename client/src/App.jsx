@@ -15,6 +15,7 @@ import OrderSuccessPage from './pages/customer/OrderSuccessPage';
 import ProfilePage from './pages/customer/ProfilePage';
 import OrdersPage from './pages/customer/OrdersPage';
 import OrderDetailPage from './pages/customer/OrderDetailPage';
+import TrackOrderPage from './pages/customer/TrackOrderPage';
 import LoginPage from './pages/customer/LoginPage';
 import RegisterPage from './pages/customer/RegisterPage';
 import AboutPage from './pages/customer/AboutPage';
@@ -26,6 +27,7 @@ import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import AdminProductsPage from './pages/admin/AdminProductsPage';
 import AdminCategoriesPage from './pages/admin/AdminCategoriesPage';
 import AdminOrdersPage from './pages/admin/AdminOrdersPage';
+import AdminDeliveryPage from './pages/admin/AdminDeliveryPage';
 import AdminBannersPage from './pages/admin/AdminBannersPage';
 import AdminGalleryPage from './pages/admin/AdminGalleryPage';
 
@@ -43,6 +45,7 @@ function App() {
         <Route path="profile" element={<ProfilePage />} />
         <Route path="orders" element={<OrdersPage />} />
         <Route path="orders/:id" element={<OrderDetailPage />} />
+        <Route path="track" element={<TrackOrderPage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
         <Route path="about" element={<AboutPage />} />
@@ -59,6 +62,7 @@ function App() {
         <Route path="products" element={<AdminProductsPage />} />
         <Route path="categories" element={<AdminCategoriesPage />} />
         <Route path="orders" element={<AdminOrdersPage />} />
+        <Route path="delivery" element={<AdminDeliveryPage />} />
         <Route path="banners" element={<AdminBannersPage />} />
         <Route path="gallery" element={<AdminGalleryPage />} />
       </Route>

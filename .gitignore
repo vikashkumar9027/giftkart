@@ -27,7 +27,7 @@ logs/
 *.suo
 *.ntvs*
 *.njsproj
-*.sln
-*.sw?
-.DS_Store
-Thumbs.db
+# Local MongoDB Data
+server/data/
+data/
+*.db

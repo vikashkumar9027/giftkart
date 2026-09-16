@@ -10,6 +10,19 @@ const orderItemSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   quantity: { type: Number, required: true, min: 1 },
   image: { type: String, required: true },
+  // Product-level customization (engraving, photo, custom text)
+  customization: {
+    recipientName: { type: String, default: '' },
+    customText: { type: String, default: '' },
+    customPhotoUrl: { type: String, default: '' },
+    occasionBadge: { type: String, default: '' },
+  },
+  // Item specific packaging if chosen
+  packaging: {
+    name: { type: String, default: '' },
+    price: { type: Number, default: 0 },
+    ribbonColor: { type: String, default: '' },
+  },
 });
 
 const deliveryAddressSchema = new mongoose.Schema({
@@ -21,6 +34,14 @@ const deliveryAddressSchema = new mongoose.Schema({
   pincode: { type: String, required: [true, 'Postal code / Pincode is required'] },
 });
 
+const deliveryTimelineSchema = new mongoose.Schema({
+  status: { type: String, required: true },
+  title: { type: String, required: true },
+  description: { type: String, default: '' },
+  location: { type: String, default: 'Fulfillment Center' },
+  timestamp: { type: Date, default: Date.now },
+});
+
 const orderSchema = new mongoose.Schema(
   {
     user: {
@@ -30,6 +51,23 @@ const orderSchema = new mongoose.Schema(
     },
     items: [orderItemSchema],
     deliveryAddress: deliveryAddressSchema,
+    
+    // Gift Packaging & Presentation
+    giftPackaging: {
+      boxType: { type: String, default: 'classic' }, // 'classic', 'floral', 'velvet', 'wooden'
+      name: { type: String, default: 'Classic Eco-Kraft Box' },
+      price: { type: Number, default: 0 },
+      ribbonColor: { type: String, default: 'Crimson Velvet' },
+    },
+
+    // Handwritten Greeting Card
+    greetingCard: {
+      theme: { type: String, default: 'Birthday Elegance' },
+      message: { type: String, default: '' },
+      senderName: { type: String, default: '' },
+      fontStyle: { type: String, default: 'handwritten' },
+    },
+
     giftMessage: {
       type: String,
       default: '',
@@ -38,6 +76,40 @@ const orderSchema = new mongoose.Schema(
     deliveryDate: {
       type: Date,
     },
+    
+    // Delivery Management System fields
+    deliveryDetails: {
+      carrierName: { type: String, default: 'Standard Express' }, // e.g. FedEx, BlueDart, DHL Express, USPS
+      trackingNumber: { type: String, default: '' },
+      trackingUrl: { type: String, default: '' },
+      estimatedDelivery: { type: Date },
+      actualDelivery: { type: Date },
+      deliveryAgent: {
+        name: { type: String, default: '' },
+        phone: { type: String, default: '' },
+        vehicleType: { type: String, default: '' },
+      },
+      timeline: [deliveryTimelineSchema],
+    },
+
+    // Payment System fields
+    paymentInfo: {
+      method: {
+        type: String,
+        enum: ['card', 'upi', 'netbanking', 'cod', 'Card', 'UPI', 'NetBanking', 'Net Banking', 'Credit Card', 'Cash on Delivery', 'COD'],
+        default: 'card',
+      },
+      status: {
+        type: String,
+        enum: ['Pending', 'Paid', 'Failed', 'Refunded'],
+        default: 'Paid',
+      },
+      transactionId: { type: String, default: '' },
+      paidAt: { type: Date },
+      amountPaid: { type: Number, default: 0 },
+      details: { type: mongoose.Schema.Types.Mixed, default: {} },
+    },
+
     totalAmount: {
       type: Number,
       required: true,
@@ -45,7 +117,7 @@ const orderSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['Pending', 'Confirmed', 'Packed', 'Shipped', 'Delivered', 'Cancelled'],
+      enum: ['Pending', 'Confirmed', 'Packed', 'Shipped', 'Out for Delivery', 'Delivered', 'Cancelled'],
       default: 'Pending',
     },
   },
@@ -53,5 +125,9 @@ const orderSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// Indexes for fast querying & public order tracking
+orderSchema.index({ 'deliveryDetails.trackingNumber': 1 });
+orderSchema.index({ user: 1, createdAt: -1 });
 
 module.exports = mongoose.model('Order', orderSchema);

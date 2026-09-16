@@ -360,40 +360,368 @@ const seedData = async () => {
     const createdGallery = await Gallery.insertMany(galleryData);
     console.log(`✅ ${createdGallery.length} Gallery items created.`);
 
-    console.log('📦 Seeding sample initial order...');
-    const sampleOrder = await Order.create({
-      user: customerUser._id,
-      items: [
-        {
-          product: createdProducts[0]._id,
-          name: createdProducts[0].name,
-          price: createdProducts[0].price,
-          quantity: 1,
-          image: createdProducts[0].images[0],
+    console.log('📦 Seeding rich demo orders with delivery tracking, packaging, and payments...');
+    const sampleOrders = [
+      {
+        user: customerUser._id,
+        items: [
+          {
+            product: createdProducts[0]._id,
+            name: createdProducts[0].name,
+            price: createdProducts[0].price,
+            quantity: 1,
+            image: createdProducts[0].images[0],
+            customization: {
+              recipientName: 'Sarah Jenkins',
+              customText: 'To Sarah with Love • 2026',
+              customPhotoUrl: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=400&q=80',
+              occasionBadge: 'Birthday',
+            },
+          },
+          {
+            product: createdProducts[2]._id,
+            name: createdProducts[2].name,
+            price: createdProducts[2].price,
+            quantity: 1,
+            image: createdProducts[2].images[0],
+          },
+        ],
+        deliveryAddress: {
+          fullName: 'Sarah Jenkins',
+          phone: '+1 (555) 234-5678',
+          address: '742 Evergreen Terrace, Suite 104',
+          city: 'Springfield',
+          state: 'Oregon',
+          pincode: '97477',
         },
-        {
-          product: createdProducts[2]._id,
-          name: createdProducts[2].name,
-          price: createdProducts[2].price,
-          quantity: 1,
-          image: createdProducts[2].images[0],
+        giftPackaging: {
+          boxType: 'velvet_box',
+          name: 'Royal Velvet Keepsake Box',
+          price: 18,
+          ribbonColor: 'Burgundy Silk',
         },
-      ],
-      deliveryAddress: {
-        fullName: 'Sarah Jenkins',
-        phone: '+1 (555) 234-5678',
-        address: '742 Evergreen Terrace, Suite 104',
-        city: 'Springfield',
-        state: 'Oregon',
-        pincode: '97477',
+        greetingCard: {
+          theme: 'Golden Celebration',
+          message: 'Happy Birthday to my dearest sister! Wishing you endless bliss and magic on your special day.',
+          senderName: 'David Jenkins',
+          fontStyle: 'cursive',
+        },
+        deliveryDetails: {
+          carrierName: 'FedEx Express',
+          trackingNumber: 'FED-1029-482019',
+          trackingUrl: 'https://www.fedex.com/fedextrack/?trknbr=FED-1029-482019',
+          estimatedDelivery: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+          deliveryAgent: {
+            name: 'Michael Vance',
+            phone: '+1 (555) 782-9012',
+          },
+          timeline: [
+            {
+              status: 'Confirmed',
+              title: 'Order Confirmed & Verified',
+              description: 'Customer order approved and sent to packaging department.',
+              timestamp: new Date(Date.now() - 36 * 60 * 60 * 1000),
+              location: 'San Francisco Fulfillment Hub',
+            },
+            {
+              status: 'Packed',
+              title: 'Artisan Packaging & Custom Engraving Completed',
+              description: 'Gift items curated, custom plaque engraved, and sealed in Royal Velvet Box with Burgundy Silk ribbon.',
+              timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000),
+              location: 'GiftNest Master Crafting Station',
+            },
+            {
+              status: 'Shipped',
+              title: 'Dispatched via FedEx Express Priority',
+              description: 'Package inducted into FedEx network with AWB #FED-1029-482019.',
+              timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000),
+              location: 'FedEx Sorting Terminal, Oakland CA',
+            },
+            {
+              status: 'Shipped',
+              title: 'In Transit — Regional Air Transit',
+              description: 'Departed sorting facility en route to Portland Regional Hub.',
+              timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000),
+              location: 'FedEx Air Cargo Facility',
+            },
+          ],
+        },
+        paymentInfo: {
+          method: 'Credit Card',
+          status: 'Paid',
+          transactionId: 'TXN-CARD-901824',
+          paidAt: new Date(Date.now() - 36 * 60 * 60 * 1000),
+          amountPaid: createdProducts[0].price + createdProducts[2].price + 18,
+          details: { cardLast4: '4242', brand: 'Visa' },
+        },
+        giftMessage: 'Happy Birthday to my dearest sister! Wishing you endless bliss and magic on your special day.',
+        deliveryDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+        totalAmount: createdProducts[0].price + createdProducts[2].price + 18,
+        status: 'Shipped',
       },
-      giftMessage: 'Happy Birthday to my dearest sister! Wishing you a magnificent year filled with love and wonder.',
-      deliveryDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-      totalAmount: createdProducts[0].price + createdProducts[2].price,
-      status: 'Confirmed',
-    });
+      {
+        user: customerUser._id,
+        items: [
+          {
+            product: createdProducts[1]._id,
+            name: createdProducts[1].name,
+            price: createdProducts[1].price,
+            quantity: 1,
+            image: createdProducts[1].images[0],
+            customization: {
+              recipientName: 'David & Emily',
+              customText: 'Forever & Always • 2021-2026',
+            },
+          },
+        ],
+        deliveryAddress: {
+          fullName: 'Emily Thorne',
+          phone: '+1 (555) 987-6543',
+          address: '108 Ocean Boulevard, Penthouse 4',
+          city: 'Santa Monica',
+          state: 'California',
+          pincode: '90401',
+        },
+        giftPackaging: {
+          boxType: 'floral_wrap',
+          name: 'Botanical Floral Wrap',
+          price: 12,
+          ribbonColor: 'Royal Gold',
+        },
+        greetingCard: {
+          theme: 'Romantic Blossom',
+          message: 'Happy 5th Anniversary, my love! Here is to a lifetime of shared laughter and adventures.',
+          senderName: 'David Jenkins',
+          fontStyle: 'cursive',
+        },
+        deliveryDetails: {
+          carrierName: 'BlueDart Prime',
+          trackingNumber: 'BLU-8920-192831',
+          trackingUrl: 'https://www.bluedart.com/tracking?awb=BLU-8920-192831',
+          estimatedDelivery: new Date(Date.now() - 6 * 60 * 60 * 1000),
+          deliveryAgent: {
+            name: 'Rajesh Sharma',
+            phone: '+1 (555) 349-1120',
+          },
+          timeline: [
+            {
+              status: 'Confirmed',
+              title: 'Order Placed & Paid',
+              description: 'Paid via Instant UPI QR scan.',
+              timestamp: new Date(Date.now() - 48 * 60 * 60 * 1000),
+              location: 'Los Angeles Hub',
+            },
+            {
+              status: 'Packed',
+              title: 'Gift Packed with Botanical Floral Wrap',
+              description: 'Sealed with Royal Gold satin ribbon and handwritten card.',
+              timestamp: new Date(Date.now() - 36 * 60 * 60 * 1000),
+              location: 'GiftNest Craft Studio',
+            },
+            {
+              status: 'Shipped',
+              title: 'Dispatched via BlueDart Prime',
+              description: 'In transit with delivery courier.',
+              timestamp: new Date(Date.now() - 20 * 60 * 60 * 1000),
+              location: 'BlueDart Santa Monica Branch',
+            },
+            {
+              status: 'Delivered',
+              title: 'Successfully Delivered',
+              description: 'Handed over directly to Emily Thorne. Verified delivery.',
+              timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000),
+              location: 'Santa Monica, CA',
+            },
+          ],
+        },
+        paymentInfo: {
+          method: 'UPI',
+          status: 'Paid',
+          transactionId: 'TXN-UPI-882190',
+          paidAt: new Date(Date.now() - 48 * 60 * 60 * 1000),
+          amountPaid: createdProducts[1].price + 12,
+          details: { vpa: 'sarah@okaxis' },
+        },
+        giftMessage: 'Happy 5th Anniversary, my love! Here is to a lifetime of shared laughter and adventures.',
+        deliveryDate: new Date(Date.now() - 6 * 60 * 60 * 1000),
+        totalAmount: createdProducts[1].price + 12,
+        status: 'Delivered',
+      },
+      {
+        user: customerUser._id,
+        items: [
+          {
+            product: createdProducts[3]._id,
+            name: createdProducts[3].name,
+            price: createdProducts[3].price,
+            quantity: 2,
+            image: createdProducts[3].images[0],
+          },
+        ],
+        deliveryAddress: {
+          fullName: 'Jonathan Miller',
+          phone: '+1 (555) 432-1098',
+          address: '420 Madison Avenue, 15th Floor',
+          city: 'New York',
+          state: 'New York',
+          pincode: '10017',
+        },
+        giftPackaging: {
+          boxType: 'wooden_crate',
+          name: 'Rustic Wooden Keepsake Crate',
+          price: 24,
+          ribbonColor: 'Emerald Satin',
+        },
+        greetingCard: {
+          theme: 'Executive Foil',
+          message: 'Thank you for your partnership and outstanding contributions throughout this quarter.',
+          senderName: 'GiftNest Corporate Relations',
+          fontStyle: 'serif',
+        },
+        deliveryDetails: {
+          carrierName: 'DHL Express',
+          trackingNumber: 'DHL-5819-301984',
+          trackingUrl: 'https://www.dhl.com/track?trackingNumber=DHL-5819-301984',
+          estimatedDelivery: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+          deliveryAgent: {
+            name: 'Anthony Rossi',
+            phone: '+1 (555) 671-8829',
+          },
+          timeline: [
+            {
+              status: 'Confirmed',
+              title: 'Order Confirmed',
+              description: 'Corporate client batch approved.',
+              timestamp: new Date(Date.now() - 18 * 60 * 60 * 1000),
+              location: 'New York Processing Center',
+            },
+            {
+              status: 'Packed',
+              title: 'Assembled in Rustic Wooden Crate',
+              description: 'Tied with Emerald Satin ribbon and foil letterhead.',
+              timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000),
+              location: 'GiftNest NY Atelier',
+            },
+          ],
+        },
+        paymentInfo: {
+          method: 'Net Banking',
+          status: 'Paid',
+          transactionId: 'TXN-NET-449102',
+          paidAt: new Date(Date.now() - 18 * 60 * 60 * 1000),
+          amountPaid: createdProducts[3].price * 2 + 24,
+          details: { bank: 'JPMorgan Chase' },
+        },
+        deliveryDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+        totalAmount: createdProducts[3].price * 2 + 24,
+        status: 'Packed',
+      },
+      {
+        user: customerUser._id,
+        items: [
+          {
+            product: createdProducts[4]._id,
+            name: createdProducts[4].name,
+            price: createdProducts[4].price,
+            quantity: 1,
+            image: createdProducts[4].images[0],
+          },
+        ],
+        deliveryAddress: {
+          fullName: 'Clara Oswald',
+          phone: '+1 (555) 776-5544',
+          address: '12 Rose Cottage Lane',
+          city: 'Austin',
+          state: 'Texas',
+          pincode: '73301',
+        },
+        giftPackaging: {
+          boxType: 'eco_kraft',
+          name: 'Artisan Eco-Kraft Box',
+          price: 6,
+          ribbonColor: 'Rose Pink',
+        },
+        greetingCard: {
+          theme: 'Warm Sunshine',
+          message: 'Warmest congratulations on your new beginnings! Sending big hugs.',
+          senderName: 'Sarah Jenkins',
+          fontStyle: 'handwriting',
+        },
+        deliveryDetails: {
+          carrierName: 'USPS Priority',
+          trackingNumber: 'USPS-9400-111899',
+          estimatedDelivery: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000),
+          timeline: [
+            {
+              status: 'Confirmed',
+              title: 'Order Confirmed',
+              description: 'Payment verified. Ready for warehouse fulfillment queue.',
+              timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
+              location: 'Austin Hub',
+            },
+          ],
+        },
+        paymentInfo: {
+          method: 'Credit Card',
+          status: 'Paid',
+          transactionId: 'TXN-CARD-773821',
+          paidAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
+          amountPaid: createdProducts[4].price + 6,
+          details: { cardLast4: '1092', brand: 'Mastercard' },
+        },
+        deliveryDate: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000),
+        totalAmount: createdProducts[4].price + 6,
+        status: 'Confirmed',
+      },
+      {
+        user: customerUser._id,
+        items: [
+          {
+            product: createdProducts[5]._id,
+            name: createdProducts[5].name,
+            price: createdProducts[5].price,
+            quantity: 1,
+            image: createdProducts[5].images[0],
+            customization: {
+              recipientName: 'Robert Langdon',
+              customText: 'Wisdom & Light',
+            },
+          },
+        ],
+        deliveryAddress: {
+          fullName: 'Robert Langdon',
+          phone: '+1 (555) 334-9988',
+          address: '50 Memorial Drive, Room 302',
+          city: 'Cambridge',
+          state: 'Massachusetts',
+          pincode: '02139',
+        },
+        giftPackaging: {
+          boxType: 'standard',
+          name: 'Classic Gifting Wrap',
+          price: 0,
+          ribbonColor: 'Midnight Silver',
+        },
+        greetingCard: {
+          theme: 'Classic Ivory',
+          message: 'With deep appreciation for your mentorship and guidance.',
+          senderName: 'David Jenkins',
+        },
+        deliveryDetails: {
+          timeline: [],
+        },
+        paymentInfo: {
+          method: 'Cash on Delivery',
+          status: 'Pending',
+        },
+        deliveryDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+        totalAmount: createdProducts[5].price,
+        status: 'Pending',
+      },
+    ];
 
-    console.log(`✅ 1 Sample Order created: ID ${sampleOrder._id}`);
+    const createdOrders = await Order.insertMany(sampleOrders);
+    console.log(`✅ ${createdOrders.length} Rich Sample Orders created.`);
     console.log('\n🎉 GiftNest Database successfully seeded with rich demo data!\n');
 
     process.exit(0);

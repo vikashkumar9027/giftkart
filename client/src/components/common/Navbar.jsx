@@ -11,6 +11,7 @@ import {
   Package,
   ShieldAlert,
   ChevronDown,
+  Truck,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
@@ -40,6 +41,7 @@ const Navbar = () => {
     { name: 'Home', path: '/' },
     { name: 'Shop All', path: '/shop' },
     { name: 'Categories', path: '/shop' },
+    { name: 'Track Order', path: '/track' },
     { name: 'About', path: '/about' },
     { name: 'Contact', path: '/contact' },
   ];
@@ -179,6 +181,15 @@ const Navbar = () => {
                       My Orders
                     </Link>
 
+                    <Link
+                      to="/track"
+                      onClick={() => setUserDropdownOpen(false)}
+                      className="flex items-center px-4 py-2.5 text-sm text-stone-700 hover:bg-rose-50 hover:text-rose-700 transition-colors"
+                    >
+                      <Truck className="w-4 h-4 mr-3 text-stone-400" />
+                      Track Shipment
+                    </Link>
+
                     {isAdmin && (
                       <Link
                         to="/admin/dashboard"
@@ -287,6 +298,14 @@ const Navbar = () => {
                 >
                   <Package className="w-4 h-4 mr-3 text-stone-400" />
                   My Orders
+                </Link>
+                <Link
+                  to="/track"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center px-3 py-2 text-sm text-stone-700 hover:bg-stone-50 rounded-xl"
+                >
+                  <Truck className="w-4 h-4 mr-3 text-stone-400" />
+                  Track Shipment
                 </Link>
                 {isAdmin && (
                   <Link

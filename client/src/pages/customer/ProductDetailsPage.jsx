@@ -17,6 +17,41 @@ import { useCart } from '../../context/CartContext';
 import { useToast } from '../../components/common/Toast';
 import ProductCard from '../../components/customer/ProductCard';
 
+const packagingOptions = [
+  {
+    id: 'classic',
+    name: 'Classic Eco-Kraft Box',
+    price: 0,
+    desc: 'Sustainable biodegradable kraft box tied with organic twine.',
+  },
+  {
+    id: 'floral',
+    name: 'Celebration Floral Wrap',
+    price: 6.99,
+    desc: 'Artisan floral botanical paper wrap with hand-tied satin ribbon.',
+  },
+  {
+    id: 'velvet',
+    name: 'Royal Velvet Keepsake Box',
+    price: 9.99,
+    desc: 'Plush velvet rigid jewelry hamper box with magnetic closure.',
+  },
+  {
+    id: 'wooden',
+    name: 'Artisan Wooden Keepsake Crate',
+    price: 14.99,
+    desc: 'Hand-carved pine keepsake box with burnt brass clasp.',
+  },
+];
+
+const ribbonColors = [
+  { name: 'Crimson Velvet', color: '#9f1239' },
+  { name: 'Champagne Gold', color: '#d97706' },
+  { name: 'Blush Silk', color: '#f472b6' },
+  { name: 'Emerald Forest', color: '#047857' },
+  { name: 'Midnight Navy', color: '#1e3a8a' },
+];
+
 const ProductDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -29,6 +64,14 @@ const ProductDetailsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
+
+  // Customization & Packaging states
+  const [recipientName, setRecipientName] = useState('');
+  const [customText, setCustomText] = useState('');
+  const [customPhotoUrl, setCustomPhotoUrl] = useState('');
+  const [selectedPackaging, setSelectedPackaging] = useState(packagingOptions[0]);
+  const [selectedRibbon, setSelectedRibbon] = useState(ribbonColors[0].name);
+  const [isCustomizing, setIsCustomizing] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -103,13 +146,28 @@ const ProductDetailsPage = () => {
 
   const handleAddToCart = () => {
     if (isOutOfStock) return;
-    const result = addToCart(product, quantity);
+
+    const customization = {
+      recipientName: recipientName.trim(),
+      customText: customText.trim(),
+      customPhotoUrl: customPhotoUrl.trim(),
+      occasionBadge: product.occasion || '',
+    };
+
+    const packaging = {
+      name: selectedPackaging.name,
+      price: selectedPackaging.price,
+      ribbonColor: selectedRibbon,
+    };
+
+    const result = addToCart(product, quantity, customization, packaging);
     if (result.success) {
       showToast(result.message, 'success');
     } else {
       showToast(result.message, 'error');
     }
   };
+
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
@@ -214,6 +272,171 @@ const ProductDetailsPage = () => {
               </p>
             </div>
 
+            {/* Gift Customization & Packing Studio Accordion */}
+            <div className="pt-2 border-t border-stone-200">
+              <div className="bg-rose-50/40 rounded-3xl p-5 border border-rose-100 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-rose-600 text-white flex items-center justify-center shadow-xs">
+                      <Sparkles className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h4 className="font-serif font-bold text-sm text-stone-900">
+                        Artisan Customization & Gift Packing
+                      </h4>
+                      <p className="text-[11px] text-stone-500">
+                        Add personalized name engraving, photo cloche, and luxury packaging.
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsCustomizing(!isCustomizing)}
+                    className="text-xs font-bold text-rose-600 hover:text-rose-700 bg-white px-3 py-1.5 rounded-full border border-rose-200 shadow-xs"
+                  >
+                    {isCustomizing ? 'Hide Options' : 'Personalize Gift'}
+                  </button>
+                </div>
+
+                {isCustomizing && (
+                  <div className="space-y-4 pt-3 border-t border-rose-100/80 animate-fade-in text-xs">
+                    {/* Recipient & Engraving Input */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block font-bold text-stone-700 mb-1">
+                          Recipient Name (Optional)
+                        </label>
+                        <input
+                          type="text"
+                          value={recipientName}
+                          onChange={(e) => setRecipientName(e.target.value)}
+                          placeholder="e.g. For Sophia"
+                          maxLength={35}
+                          className="w-full px-3 py-2 rounded-xl bg-white border border-stone-200 text-xs focus:ring-2 focus:ring-rose-500 outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block font-bold text-stone-700 mb-1">
+                          Custom Engraving / Plaque Text
+                        </label>
+                        <input
+                          type="text"
+                          value={customText}
+                          onChange={(e) => setCustomText(e.target.value)}
+                          placeholder="e.g. Always & Forever 2026"
+                          maxLength={45}
+                          className="w-full px-3 py-2 rounded-xl bg-white border border-stone-200 text-xs focus:ring-2 focus:ring-rose-500 outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Photo URL (For Photo Plaques / Frames) */}
+                    <div>
+                      <label className="block font-bold text-stone-700 mb-1">
+                        Personalized Photo Image URL (Optional)
+                      </label>
+                      <input
+                        type="url"
+                        value={customPhotoUrl}
+                        onChange={(e) => setCustomPhotoUrl(e.target.value)}
+                        placeholder="https://images.unsplash.com/... (Image URL for engraved photo gifts)"
+                        className="w-full px-3 py-2 rounded-xl bg-white border border-stone-200 text-xs focus:ring-2 focus:ring-rose-500 outline-none"
+                      />
+                      {customPhotoUrl && (
+                        <div className="mt-2 flex items-center space-x-2">
+                          <img
+                            src={customPhotoUrl}
+                            alt="Customization Preview"
+                            className="w-10 h-10 rounded-lg object-cover border border-stone-200"
+                            onError={(e) => (e.target.style.display = 'none')}
+                          />
+                          <span className="text-[11px] text-emerald-600 font-medium">
+                            Photo preview attached
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Packaging Style Selection */}
+                    <div>
+                      <label className="block font-bold text-stone-700 mb-2">
+                        Select Signature Gift Packaging
+                      </label>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {packagingOptions.map((pkg) => {
+                          const isSelected = selectedPackaging.id === pkg.id;
+                          return (
+                            <div
+                              key={pkg.id}
+                              onClick={() => setSelectedPackaging(pkg)}
+                              className={`p-3 rounded-2xl border cursor-pointer transition-all ${
+                                isSelected
+                                  ? 'bg-white border-rose-600 ring-2 ring-rose-200 shadow-xs'
+                                  : 'bg-white/60 border-stone-200 hover:bg-white'
+                              }`}
+                            >
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="font-bold text-stone-900">{pkg.name}</span>
+                                <span
+                                  className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${
+                                    pkg.price === 0
+                                      ? 'bg-emerald-50 text-emerald-700'
+                                      : 'bg-rose-50 text-rose-700'
+                                  }`}
+                                >
+                                  {pkg.price === 0 ? 'FREE' : `+${formatCurrency(pkg.price)}`}
+                                </span>
+                              </div>
+                              <p className="text-[11px] text-stone-500 leading-tight">{pkg.desc}</p>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Ribbon Color Palette */}
+                    <div>
+                      <label className="block font-bold text-stone-700 mb-1.5">
+                        Ribbon Satin Finish: <span className="text-rose-600 font-serif">{selectedRibbon}</span>
+                      </label>
+                      <div className="flex items-center space-x-3">
+                        {ribbonColors.map((rb) => (
+                          <button
+                            key={rb.name}
+                            type="button"
+                            onClick={() => setSelectedRibbon(rb.name)}
+                            className={`w-7 h-7 rounded-full transition-transform flex items-center justify-center ${
+                              selectedRibbon === rb.name
+                                ? 'scale-125 ring-2 ring-rose-500 ring-offset-2'
+                                : 'opacity-80 hover:opacity-100'
+                            }`}
+                            style={{ backgroundColor: rb.color }}
+                            title={rb.name}
+                          >
+                            {selectedRibbon === rb.name && (
+                              <Check className="w-3.5 h-3.5 text-white stroke-[3]" />
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Live Customization Summary Preview */}
+                    {(customText || recipientName) && (
+                      <div className="bg-white p-3 rounded-xl border border-rose-200 space-y-1">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-rose-500 block">
+                          Preview of Inscription on Gift:
+                        </span>
+                        <p className="font-serif italic text-stone-800 text-xs">
+                          {recipientName ? `"${recipientName}" — ` : ''}{customText}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+
             {/* Quantity Selector & Add to Cart */}
             <div className="pt-4 space-y-4">
               <div className="flex items-center space-x-4">
@@ -259,7 +482,13 @@ const ProductDetailsPage = () => {
                   }`}
                 >
                   <ShoppingBag className="w-5 h-5" />
-                  <span>{isOutOfStock ? 'Out of Stock' : `Add ${quantity} to Cart`}</span>
+                  <span>
+                    {isOutOfStock
+                      ? 'Out of Stock'
+                      : `Add to Cart • ${formatCurrency(
+                          (product.price + selectedPackaging.price) * quantity
+                        )}`}
+                  </span>
                 </button>
 
                 <Link
@@ -271,6 +500,7 @@ const ProductDetailsPage = () => {
               </div>
             </div>
           </div>
+
 
           {/* Value Badges */}
           <div className="bg-stone-50 rounded-3xl p-6 border border-stone-200 space-y-3">

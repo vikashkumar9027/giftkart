@@ -29,6 +29,7 @@ const AdminLayout = () => {
     if (path.includes('/admin/products')) return 'Product Management';
     if (path.includes('/admin/categories')) return 'Category Management';
     if (path.includes('/admin/orders')) return 'Order Operations';
+    if (path.includes('/admin/delivery')) return 'Delivery & Courier Operations';
     if (path.includes('/admin/gallery')) return 'Gallery CMS';
     if (path.includes('/admin/banners')) return 'Banners & Promotions';
     return 'Admin CMS';
