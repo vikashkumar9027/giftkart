@@ -56,7 +56,7 @@ const PrintPackingSlipModal = ({ isOpen, onClose, order }) => {
                   GiftNest — Packaging Slip
                 </h1>
                 <p className="text-xs text-stone-500">Gifting Studio & Fulfillment Center</p>
-                <p className="text-[11px] text-stone-400">Hub: SFO-Central-01 | Station: Pack-3</p>
+                <p className="text-[11px] text-stone-400">Hub: BLR-Ekart-Central-01 | Station: Pack-3</p>
               </div>
 
               <div className="text-right space-y-1">

@@ -18,6 +18,43 @@ const productSchema = new mongoose.Schema(
       required: [true, 'Please provide product price'],
       min: [0, 'Price must be a positive number'],
     },
+    mrp: {
+      type: Number,
+      default: function () {
+        return Math.round(this.price * 1.4);
+      },
+    },
+    brand: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    seller: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    rating: {
+      type: Number,
+      default: 4.3,
+      min: 1,
+      max: 5,
+    },
+    ratingsCount: {
+      type: Number,
+      default: 142,
+    },
+    isAssured: {
+      type: Boolean,
+      default: true,
+    },
+    highlights: {
+      type: [String],
+      default: [],
+    },
+    specifications: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {},
+    },
     description: {
       type: String,
       required: [true, 'Please provide product description'],
@@ -40,17 +77,15 @@ const productSchema = new mongoose.Schema(
     },
     occasion: {
       type: String,
-      required: [true, 'Please specify an occasion'],
-      enum: [
-        'Birthday',
-        'Anniversary',
-        'Wedding',
-        'Corporate',
-        'Festival',
-        'Personalised Gifts',
-        'General',
-      ],
       default: 'General',
+    },
+    recipient: {
+      type: String,
+      default: 'Anyone',
+    },
+    isGift: {
+      type: Boolean,
+      default: true,
     },
     isFeatured: {
       type: Boolean,

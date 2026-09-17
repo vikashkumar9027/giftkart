@@ -4,6 +4,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 // Layouts
 import MainLayout from './layouts/MainLayout';
 import AdminLayout from './layouts/AdminLayout';
+import SellerLayout from './layouts/SellerLayout';
 
 // Customer Pages
 import HomePage from './pages/customer/HomePage';
@@ -16,10 +17,17 @@ import ProfilePage from './pages/customer/ProfilePage';
 import OrdersPage from './pages/customer/OrdersPage';
 import OrderDetailPage from './pages/customer/OrderDetailPage';
 import TrackOrderPage from './pages/customer/TrackOrderPage';
+import GiftStudioPage from './pages/customer/GiftStudioPage';
 import LoginPage from './pages/customer/LoginPage';
 import RegisterPage from './pages/customer/RegisterPage';
 import AboutPage from './pages/customer/AboutPage';
 import ContactPage from './pages/customer/ContactPage';
+
+// Seller Portal Pages (Flipkart-Style Multi-Vendor)
+import SellerRegisterPage from './pages/seller/SellerRegisterPage';
+import SellerDashboardPage from './pages/seller/SellerDashboardPage';
+import SellerProductsPage from './pages/seller/SellerProductsPage';
+import SellerOrdersPage from './pages/seller/SellerOrdersPage';
 
 // Admin Pages
 import AdminLoginPage from './pages/admin/AdminLoginPage';
@@ -38,6 +46,8 @@ function App() {
       <Route path="/" element={<MainLayout />}>
         <Route index element={<HomePage />} />
         <Route path="shop" element={<ShopPage />} />
+        <Route path="gifts" element={<GiftStudioPage />} />
+        <Route path="occasions" element={<GiftStudioPage />} />
         <Route path="product/:id" element={<ProductDetailsPage />} />
         <Route path="cart" element={<CartPage />} />
         <Route path="checkout" element={<CheckoutPage />} />
@@ -46,10 +56,19 @@ function App() {
         <Route path="orders" element={<OrdersPage />} />
         <Route path="orders/:id" element={<OrderDetailPage />} />
         <Route path="track" element={<TrackOrderPage />} />
+        <Route path="become-seller" element={<SellerRegisterPage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
         <Route path="about" element={<AboutPage />} />
         <Route path="contact" element={<ContactPage />} />
+      </Route>
+
+      {/* Seller Hub Portal (Flipkart-Style Seller Center) */}
+      <Route path="/seller" element={<SellerLayout />}>
+        <Route index element={<Navigate to="/seller/dashboard" replace />} />
+        <Route path="dashboard" element={<SellerDashboardPage />} />
+        <Route path="products" element={<SellerProductsPage />} />
+        <Route path="orders" element={<SellerOrdersPage />} />
       </Route>
 
       {/* Admin Login (Stand-alone protected login) */}

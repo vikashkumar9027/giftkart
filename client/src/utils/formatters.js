@@ -1,10 +1,17 @@
-// Currency formatter (USD default, cleanly formatted)
+// Currency formatter (Indian Rupees INR ₹, cleanly formatted)
 export const formatCurrency = (amount) => {
-  if (amount === undefined || amount === null || isNaN(amount)) return '$0.00';
-  return new Intl.NumberFormat('en-US', {
+  if (amount === undefined || amount === null || isNaN(amount)) return '₹0';
+  return new Intl.NumberFormat('en-IN', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'INR',
+    maximumFractionDigits: 0,
   }).format(amount);
+};
+
+// Calculate percentage discount
+export const calculateDiscount = (mrp, price) => {
+  if (!mrp || !price || Number(mrp) <= Number(price)) return 0;
+  return Math.round(((Number(mrp) - Number(price)) / Number(mrp)) * 100);
 };
 
 // Date formatter

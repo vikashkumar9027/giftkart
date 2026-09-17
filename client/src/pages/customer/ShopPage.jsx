@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Search, Filter, ArrowUpDown, X, Frown, Sparkles } from 'lucide-react';
+import { useSearchParams, Link } from 'react-router-dom';
+import { Search, Filter, ArrowUpDown, X, Frown, Sparkles, Gift, ArrowRight } from 'lucide-react';
 import api from '../../services/api';
 import ProductCard from '../../components/customer/ProductCard';
 import Pagination from '../../components/common/Pagination';
@@ -15,6 +15,7 @@ const ShopPage = () => {
   const searchParam = searchParams.get('search') || '';
   const sortParam = searchParams.get('sort') || 'newest';
   const pageParam = parseInt(searchParams.get('page'), 10) || 1;
+  const isGiftParam = searchParams.get('isGift') === 'true';
 
   // Local state
   const [products, setProducts] = useState([]);
@@ -54,6 +55,7 @@ const ShopPage = () => {
       const params = new URLSearchParams();
       if (categoryParam && categoryParam !== 'all') params.append('category', categoryParam);
       if (occasionParam && occasionParam !== 'all') params.append('occasion', occasionParam);
+      if (isGiftParam) params.append('isGift', 'true');
       if (searchParam && searchParam.trim()) params.append('search', searchParam.trim());
       if (sortParam) params.append('sort', sortParam);
       params.append('page', pageParam);
@@ -71,7 +73,7 @@ const ShopPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [categoryParam, occasionParam, searchParam, sortParam, pageParam]);
+  }, [categoryParam, occasionParam, isGiftParam, searchParam, sortParam, pageParam]);
 
   useEffect(() => {
     fetchProducts();
@@ -100,15 +102,15 @@ const ShopPage = () => {
     setSearchParams({});
   };
 
-  const occasionsList = ['Birthday', 'Anniversary', 'Wedding', 'Corporate', 'Festival', 'Personalised Gifts'];
+  const occasionsList = ['Birthday', 'Anniversary', 'Wedding', 'Festival', 'Valentine', 'Personalised', 'Corporate'];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Page Header */}
-      <div className="text-center max-w-2xl mx-auto mb-10 space-y-3">
+      <div className="text-center max-w-2xl mx-auto mb-8 space-y-3">
         <div className="inline-flex items-center space-x-2 text-rose-600 text-xs font-bold uppercase tracking-wider bg-rose-50 px-3 py-1 rounded-full border border-rose-100">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>Handcrafted Catalog</span>
+          <span>Catalog &amp; Marketplace</span>
         </div>
         <h1 className="text-3xl sm:text-4xl font-serif font-bold text-stone-900">
           Gifts Curated for Every Milestone
@@ -118,15 +120,35 @@ const ShopPage = () => {
         </p>
       </div>
 
-      {/* Top Controls Bar: Search & Sort */}
+      {/* Dedicated Gift Options Callout Banner */}
+      <div className="mb-8 p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 text-white shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="flex items-center space-x-3 text-center sm:text-left">
+          <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0 text-2xl">
+            🎁
+          </div>
+          <div>
+            <h3 className="font-bold text-base text-white">Looking for Birthday or Anniversary gifts specifically?</h3>
+            <p className="text-xs text-rose-100 mt-0.5">Use our dedicated 3-step Smart Gift Finder to choose by recipient &amp; budget in ₹ INR</p>
+          </div>
+        </div>
+        <Link
+          to="/gifts"
+          className="shrink-0 px-5 py-2.5 rounded-full bg-white text-rose-600 font-bold text-xs hover:bg-stone-100 transition-colors shadow-sm flex items-center space-x-1.5"
+        >
+          <span>Open Gift Studio</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </Link>
+      </div>
+
+      {/* Top Controls Bar: Search, Quick Gifts Toggle & Sort */}
       <div className="bg-white rounded-3xl p-4 sm:p-6 shadow-sm border border-stone-200 mb-8 flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Search Bar */}
-        <form onSubmit={handleSearchSubmit} className="relative w-full md:w-96">
+        <form onSubmit={handleSearchSubmit} className="relative w-full md:w-80">
           <input
             type="text"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="Search gifts by name or description..."
+            placeholder="Search gifts or products..."
             className="w-full pl-10 pr-10 py-2.5 text-sm bg-stone-50 rounded-2xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white transition-all"
           />
           <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5" />
@@ -143,6 +165,33 @@ const ShopPage = () => {
             </button>
           )}
         </form>
+
+        {/* Middle Quick Toggles: All vs Gifts Only */}
+        <div className="flex items-center space-x-2 w-full md:w-auto justify-start">
+          <button
+            type="button"
+            onClick={() => updateParam('isGift', 'all')}
+            className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all ${
+              !isGiftParam
+                ? 'bg-stone-900 text-white shadow-xs'
+                : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+            }`}
+          >
+            All Products
+          </button>
+          <button
+            type="button"
+            onClick={() => updateParam('isGift', isGiftParam ? 'all' : 'true')}
+            className={`flex items-center space-x-1.5 px-4 py-2 rounded-2xl text-xs font-bold transition-all border ${
+              isGiftParam
+                ? 'bg-rose-600 border-rose-600 text-white shadow-xs'
+                : 'bg-rose-50 border-rose-200 text-rose-700 hover:bg-rose-100'
+            }`}
+          >
+            <span>🎁</span>
+            <span>Gifts Only</span>
+          </button>
+        </div>
 
         {/* Right side controls: Filter toggle (mobile) & Sort dropdown */}
         <div className="flex items-center justify-between w-full md:w-auto space-x-3">
@@ -178,7 +227,7 @@ const ShopPage = () => {
           <div className="bg-white rounded-3xl p-6 border border-stone-200 shadow-xs space-y-6">
             <div className="flex items-center justify-between pb-3 border-b border-stone-100">
               <h3 className="font-serif font-bold text-base text-stone-900">Filters</h3>
-              {(categoryParam !== 'all' || occasionParam !== 'all' || searchParam) && (
+              {(categoryParam !== 'all' || occasionParam !== 'all' || isGiftParam || searchParam) && (
                 <button
                   onClick={clearAllFilters}
                   className="text-xs font-semibold text-rose-600 hover:text-rose-700"
@@ -186,6 +235,41 @@ const ShopPage = () => {
                   Clear All
                 </button>
               )}
+            </div>
+
+            {/* Gifting Mode Filter */}
+            <div>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-stone-400 mb-3">
+                Item Type
+              </h4>
+              <div className="space-y-1">
+                <button
+                  onClick={() => updateParam('isGift', 'all')}
+                  className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
+                    !isGiftParam
+                      ? 'bg-rose-50 text-rose-700 font-bold'
+                      : 'text-stone-600 hover:bg-stone-50'
+                  }`}
+                >
+                  All Products
+                </button>
+                <button
+                  onClick={() => updateParam('isGift', 'true')}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
+                    isGiftParam
+                      ? 'bg-rose-50 text-rose-700 font-bold'
+                      : 'text-stone-600 hover:bg-stone-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-1.5">
+                    <span>🎁</span>
+                    <span>Gifts Only</span>
+                  </span>
+                  <span className="text-[10px] bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full font-bold">
+                    Special
+                  </span>
+                </button>
+              </div>
             </div>
 
             {/* Category Filter */}
@@ -282,6 +366,43 @@ const ShopPage = () => {
                 >
                   <X className="w-5 h-5" />
                 </button>
+              </div>
+
+              {/* Gifting Mode */}
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-stone-400 mb-3">
+                  Item Type
+                </h4>
+                <div className="space-y-1">
+                  <button
+                    onClick={() => {
+                      updateParam('isGift', 'all');
+                      setMobileFilterOpen(false);
+                    }}
+                    className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium ${
+                      !isGiftParam ? 'bg-rose-50 text-rose-700 font-bold' : 'text-stone-600'
+                    }`}
+                  >
+                    All Products
+                  </button>
+                  <button
+                    onClick={() => {
+                      updateParam('isGift', 'true');
+                      setMobileFilterOpen(false);
+                    }}
+                    className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium ${
+                      isGiftParam ? 'bg-rose-50 text-rose-700 font-bold' : 'text-stone-600'
+                    }`}
+                  >
+                    <span className="flex items-center space-x-1.5">
+                      <span>🎁</span>
+                      <span>Gifts Only</span>
+                    </span>
+                    <span className="text-[10px] bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full font-bold">
+                      Special
+                    </span>
+                  </button>
+                </div>
               </div>
 
               {/* Category */}

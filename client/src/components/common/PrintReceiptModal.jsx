@@ -64,9 +64,9 @@ const PrintReceiptModal = ({ isOpen, onClose, order }) => {
                   </div>
                   <span className="text-xl font-serif font-bold text-stone-900">GiftNest</span>
                 </div>
-                <p className="text-xs text-stone-500 mt-1">Artisanal Gifting & Curated Surprises</p>
-                <p className="text-[11px] text-stone-400">45 Blossom Avenue, San Francisco, CA</p>
-                <p className="text-[11px] text-stone-400">support@giftnest.com | +1 (800) 443-8637</p>
+                <p className="text-xs text-stone-500 mt-1">Artisanal Gifting & Curated Indian Marketplace</p>
+                <p className="text-[11px] text-stone-400">TechNest Hub, Indiranagar 100 Feet Road, Bengaluru, Karnataka 560038</p>
+                <p className="text-[11px] text-stone-400">GSTIN: 29AABCU9603R1ZM • support@giftnest.in | +91 80 4920 1829</p>
               </div>
 
               <div className="text-right space-y-1">

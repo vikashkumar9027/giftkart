@@ -11,11 +11,12 @@ import {
   CreditCard,
   QrCode,
   Building,
-  DollarSign,
+  Banknote,
   Gift,
   CheckCircle2,
   Sparkles,
   Scissors,
+  MapPin,
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
@@ -30,21 +31,21 @@ const packagingOptions = [
     desc: 'Sustainable recycled kraft box with shredded nest cushioning & botanical seal.',
   },
   {
-    boxType: 'velvet',
-    name: 'Royal Velvet Keepsake Box',
-    price: 12.0,
-    desc: 'Plush velvet casing with gilded gold corners & magnetic enclosure.',
-  },
-  {
     boxType: 'floral',
     name: 'Artisan Floral Wrap & Wax Seal',
-    price: 8.0,
-    desc: 'Handmade Italian floral parchment tied with natural twine and hot wax monogram.',
+    price: 99,
+    desc: 'Handmade Indian floral parchment tied with natural jute twine and hot wax seal.',
+  },
+  {
+    boxType: 'velvet',
+    name: 'Royal Velvet Keepsake Box',
+    price: 199,
+    desc: 'Plush velvet casing with gilded gold corners & magnetic enclosure.',
   },
   {
     boxType: 'wooden',
     name: 'Handcrafted Wooden Crate',
-    price: 18.0,
+    price: 349,
     desc: 'Solid pine keepsake chest with sliding brass latch & reusable memory box.',
   },
 ];
@@ -54,25 +55,48 @@ const ribbonOptions = [
   { name: 'Royal Gold', color: '#d97706' },
   { name: 'Emerald Satin', color: '#047857' },
   { name: 'Rose Pink', color: '#f43f5e' },
-  { name: 'Midnight Silver', color: '#475569' },
+  { name: 'Midnight Navy', color: '#1e3a8a' },
 ];
 
 const cardThemes = [
   { id: 'Birthday Elegance', label: '🎂 Birthday Elegance' },
   { id: 'Romantic Anniversary', label: '💍 Romantic Anniversary' },
   { id: 'Wedding Blessing', label: '💒 Wedding Blessing' },
-  { id: 'Golden Festivities', label: '🪔 Golden Festivities' },
+  { id: 'Golden Festivities', label: '🪔 Diwali & Festive Special' },
   { id: 'Executive Corporate', label: '💼 Executive Corporate' },
 ];
 
+const indianStates = [
+  'Andhra Pradesh',
+  'Assam',
+  'Bihar',
+  'Delhi',
+  'Goa',
+  'Gujarat',
+  'Haryana',
+  'Jharkhand',
+  'Karnataka',
+  'Kerala',
+  'Madhya Pradesh',
+  'Maharashtra',
+  'Odisha',
+  'Punjab',
+  'Rajasthan',
+  'Tamil Nadu',
+  'Telangana',
+  'Uttar Pradesh',
+  'Uttarakhand',
+  'West Bengal',
+];
+
 const popularBanks = [
-  'Chase Bank',
-  'Bank of America',
-  'Wells Fargo',
-  'Citibank',
+  'State Bank of India (SBI)',
   'HDFC Bank',
   'ICICI Bank',
-  'State Bank of India',
+  'Axis Bank',
+  'Punjab National Bank (PNB)',
+  'Bank of Baroda',
+  'Kotak Mahindra Bank',
 ];
 
 const CheckoutPage = () => {
@@ -119,14 +143,14 @@ const CheckoutPage = () => {
 
   // Card details state
   const [cardDetails, setCardDetails] = useState({
-    cardNumber: '4532 •••• •••• 8920',
-    cardName: user?.name || 'SARAH JENKINS',
-    cardExpiry: '08/29',
-    cardCvv: '839',
+    cardNumber: '5241 •••• •••• 9102',
+    cardName: user?.name ? user.name.toUpperCase() : 'PRIYA SHARMA',
+    cardExpiry: '06/29',
+    cardCvv: '482',
   });
 
   // UPI state
-  const [upiId, setUpiId] = useState('sarah@okaxis');
+  const [upiId, setUpiId] = useState('priyasharma@okhdfcbank');
   const [upiSimulatedApproved, setUpiSimulatedApproved] = useState(false);
 
   // Net banking state
@@ -142,7 +166,8 @@ const CheckoutPage = () => {
     });
   };
 
-  const shippingFee = subtotal >= 50 ? 0 : 7.99;
+  // Free shipping threshold in INR (₹499)
+  const shippingFee = subtotal >= 499 ? 0 : 40;
   const packagingFee = selectedPackaging.price;
   const grandTotal = subtotal + shippingFee + packagingFee;
 
@@ -164,6 +189,12 @@ const CheckoutPage = () => {
       return;
     }
 
+    if (!/^\d{6}$/.test(formData.pincode.trim())) {
+      setError('Please enter a valid 6-digit Indian PIN code (e.g. 560001 or 110001).');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -176,9 +207,9 @@ const CheckoutPage = () => {
 
       if (paymentMethod === 'card') {
         paymentInfo.details = {
-          last4: cardDetails.cardNumber.slice(-4) || '8920',
-          cardBrand: 'Visa / Mastercard',
-          authCode: 'AUTH_OK_3DS',
+          last4: cardDetails.cardNumber.slice(-4) || '9102',
+          cardBrand: 'RuPay / Visa / Mastercard',
+          authCode: 'AUTH_OK_3DS_OTP',
         };
       } else if (paymentMethod === 'upi') {
         paymentInfo.details = {
@@ -308,7 +339,7 @@ const CheckoutPage = () => {
 
                 <div className="sm:col-span-2">
                   <label className="block text-xs font-bold uppercase tracking-wider text-stone-500 mb-1.5">
-                    Recipient Contact Phone Number *
+                    Recipient Contact Phone Number (+91) *
                   </label>
                   <input
                     type="tel"
@@ -316,14 +347,14 @@ const CheckoutPage = () => {
                     required
                     value={formData.phone}
                     onChange={handleDeliveryChange}
-                    placeholder="e.g. +1 (555) 019-2834"
-                    className="w-full px-4 py-3 bg-stone-50 rounded-2xl border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white"
+                    placeholder="+91 98765 43210"
+                    className="w-full px-4 py-3 bg-stone-50 rounded-2xl border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white font-mono"
                   />
                 </div>
 
                 <div className="sm:col-span-2">
                   <label className="block text-xs font-bold uppercase tracking-wider text-stone-500 mb-1.5">
-                    Street Address *
+                    Street Address (Flat/House No., Building, Area) *
                   </label>
                   <input
                     type="text"
@@ -331,14 +362,14 @@ const CheckoutPage = () => {
                     required
                     value={formData.address}
                     onChange={handleDeliveryChange}
-                    placeholder="Apartment, suite, unit, building, street address..."
+                    placeholder="Flat 402, Lotus Greens, 100 Feet Road, Indiranagar"
                     className="w-full px-4 py-3 bg-stone-50 rounded-2xl border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white"
                   />
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-stone-500 mb-1.5">
-                    City *
+                    City / District *
                   </label>
                   <input
                     type="text"
@@ -346,38 +377,44 @@ const CheckoutPage = () => {
                     required
                     value={formData.city}
                     onChange={handleDeliveryChange}
-                    placeholder="San Francisco"
+                    placeholder="Bengaluru / Mumbai / Delhi"
                     className="w-full px-4 py-3 bg-stone-50 rounded-2xl border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white"
                   />
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-stone-500 mb-1.5">
-                    State / Province *
+                    State *
                   </label>
-                  <input
-                    type="text"
+                  <select
                     name="state"
                     required
                     value={formData.state}
                     onChange={handleDeliveryChange}
-                    placeholder="California"
                     className="w-full px-4 py-3 bg-stone-50 rounded-2xl border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white"
-                  />
+                  >
+                    <option value="">Select Indian State</option>
+                    {indianStates.map((st) => (
+                      <option key={st} value={st}>
+                        {st}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div className="sm:col-span-2">
                   <label className="block text-xs font-bold uppercase tracking-wider text-stone-500 mb-1.5">
-                    Postal Code / Pincode *
+                    6-Digit Postal PIN Code *
                   </label>
                   <input
                     type="text"
                     name="pincode"
                     required
+                    maxLength={6}
                     value={formData.pincode}
                     onChange={handleDeliveryChange}
-                    placeholder="94107"
-                    className="w-full px-4 py-3 bg-stone-50 rounded-2xl border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white"
+                    placeholder="560001"
+                    className="w-full px-4 py-3 bg-stone-50 rounded-2xl border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white font-mono"
                   />
                 </div>
 
@@ -674,8 +711,8 @@ const CheckoutPage = () => {
                       : 'bg-stone-50 text-stone-600 border-stone-200 hover:bg-stone-100'
                   }`}
                 >
-                  <DollarSign className="w-5 h-5" />
-                  <span>COD</span>
+                  <Banknote className="w-5 h-5" />
+                  <span>Cash on Delivery</span>
                 </button>
               </div>
 
@@ -856,12 +893,12 @@ const CheckoutPage = () => {
               {paymentMethod === 'cod' && (
                 <div className="bg-amber-50/70 p-4 rounded-2xl border border-amber-200 text-xs text-amber-900 space-y-2 animate-fade-in">
                   <div className="flex items-center space-x-2 font-bold">
-                    <DollarSign className="w-4 h-4 text-amber-700" />
-                    <span>Pay in Cash Upon Gift Arrival</span>
+                    <Banknote className="w-4 h-4 text-amber-700" />
+                    <span>Pay in Cash Upon Gift Arrival (Cash on Delivery)</span>
                   </div>
                   <p className="text-[11px] leading-relaxed text-amber-800">
                     Your gift will be dispatched with priority courier. The recipient or sender may settle the total of{' '}
-                    <strong>{formatCurrency(grandTotal)}</strong> directly with the courier agent.
+                    <strong>{formatCurrency(grandTotal)}</strong> directly in cash or via courier agent QR code upon delivery.
                   </p>
                 </div>
               )}

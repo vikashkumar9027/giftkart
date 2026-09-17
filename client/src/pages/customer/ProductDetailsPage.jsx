@@ -10,9 +10,15 @@ import {
   Minus,
   Plus,
   Check,
+  Star,
+  MapPin,
+  RefreshCw,
+  Award,
+  CheckCircle2,
+  Store,
 } from 'lucide-react';
 import api from '../../services/api';
-import { formatCurrency } from '../../utils/formatters';
+import { formatCurrency, calculateDiscount } from '../../utils/formatters';
 import { useCart } from '../../context/CartContext';
 import { useToast } from '../../components/common/Toast';
 import ProductCard from '../../components/customer/ProductCard';
@@ -27,19 +33,19 @@ const packagingOptions = [
   {
     id: 'floral',
     name: 'Celebration Floral Wrap',
-    price: 6.99,
+    price: 99,
     desc: 'Artisan floral botanical paper wrap with hand-tied satin ribbon.',
   },
   {
     id: 'velvet',
     name: 'Royal Velvet Keepsake Box',
-    price: 9.99,
+    price: 199,
     desc: 'Plush velvet rigid jewelry hamper box with magnetic closure.',
   },
   {
     id: 'wooden',
     name: 'Artisan Wooden Keepsake Crate',
-    price: 14.99,
+    price: 349,
     desc: 'Hand-carved pine keepsake box with burnt brass clasp.',
   },
 ];
@@ -72,6 +78,48 @@ const ProductDetailsPage = () => {
   const [selectedPackaging, setSelectedPackaging] = useState(packagingOptions[0]);
   const [selectedRibbon, setSelectedRibbon] = useState(ribbonColors[0].name);
   const [isCustomizing, setIsCustomizing] = useState(false);
+
+  // Flipkart-style Pincode Delivery Estimator
+  const [pincode, setPincode] = useState('560001');
+  const [pincodeStatus, setPincodeStatus] = useState({
+    checked: true,
+    available: true,
+    city: 'Bengaluru',
+    state: 'Karnataka',
+    estDays: 'Tomorrow, by 9 PM',
+    codAvailable: true,
+  });
+
+  const handleCheckPincode = (e) => {
+    e?.preventDefault();
+    const pin = pincode.trim();
+    if (!/^\d{6}$/.test(pin)) {
+      showToast('Please enter a valid 6-digit Indian PIN code (e.g. 560001)', 'error');
+      return;
+    }
+    const prefix = pin.substring(0, 2);
+    let city = 'Metro Hub';
+    let state = 'India';
+    let days = '2 - 3 Days';
+    if (['56', '57', '58', '59'].includes(prefix)) { city = 'Bengaluru'; state = 'Karnataka'; days = 'Tomorrow, by 9 PM'; }
+    else if (['40', '41', '42', '43', '44'].includes(prefix)) { city = 'Mumbai / Pune'; state = 'Maharashtra'; days = 'Tomorrow, by 9 PM'; }
+    else if (['11', '12', '20'].includes(prefix)) { city = 'Delhi NCR'; state = 'Delhi'; days = 'Tomorrow, by 9 PM'; }
+    else if (['60', '61', '62', '63', '64'].includes(prefix)) { city = 'Chennai'; state = 'Tamil Nadu'; days = 'in 2 Days'; }
+    else if (['70', '71', '72'].includes(prefix)) { city = 'Kolkata'; state = 'West Bengal'; days = 'in 2-3 Days'; }
+    else if (['50', '51', '52'].includes(prefix)) { city = 'Hyderabad'; state = 'Telangana'; days = 'Tomorrow, by 9 PM'; }
+    else if (['38', '39'].includes(prefix)) { city = 'Ahmedabad'; state = 'Gujarat'; days = 'in 2 Days'; }
+    else { city = 'Regional Delivery Hub'; days = 'in 3-4 Days'; }
+
+    setPincodeStatus({
+      checked: true,
+      available: true,
+      city,
+      state,
+      estDays: days,
+      codAvailable: true,
+    });
+    showToast(`Delivery available to ${pin} (${city}, ${state})`, 'success');
+  };
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -250,22 +298,162 @@ const ProductDetailsPage = () => {
             </div>
 
             {/* Title */}
-            <h1 className="text-3xl sm:text-4xl font-serif font-bold text-stone-900 leading-tight">
+            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-stone-900 leading-tight">
               {product.name}
             </h1>
 
-            {/* Price */}
-            <div className="flex items-baseline space-x-3">
-              <span className="text-3xl font-extrabold text-stone-900">
-                {formatCurrency(product.price)}
+            {/* Rating & Assured Badge (Flipkart Style) */}
+            <div className="flex items-center space-x-3 flex-wrap gap-y-2">
+              <div className="inline-flex items-center bg-emerald-700 text-white text-xs font-bold px-2 py-0.5 rounded shadow-xs">
+                <span>{(product.rating || 4.5).toFixed(1)}</span>
+                <Star className="w-3 h-3 ml-1 fill-white" />
+              </div>
+              <span className="text-xs font-semibold text-stone-500">
+                {(product.ratingsCount || 1280).toLocaleString('en-IN')} Ratings &amp; 340 Reviews
               </span>
-              <span className="text-xs text-stone-400 font-medium">Taxes included</span>
+              {product.isAssured !== false && (
+                <span className="inline-flex items-center text-xs font-black italic text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200" title="Flipkart NestAssured Quality Verified">
+                  <ShieldCheck className="w-3.5 h-3.5 mr-1 text-blue-600" />
+                  Nest<span className="text-amber-500">Assured</span>
+                </span>
+              )}
             </div>
+
+            {/* Price & Discounts (Flipkart Style) */}
+            <div className="space-y-1 pt-1">
+              <div className="flex items-baseline space-x-3">
+                <span className="text-3xl font-extrabold text-stone-900">
+                  {formatCurrency(product.price)}
+                </span>
+                {product.mrp && product.mrp > product.price && (
+                  <span className="text-base text-stone-400 line-through">
+                    {formatCurrency(product.mrp)}
+                  </span>
+                )}
+                {calculateDiscount(product.mrp, product.price) > 0 && (
+                  <span className="text-base font-bold text-emerald-600">
+                    {calculateDiscount(product.mrp, product.price)}% off
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-stone-500 font-medium">
+                Inclusive of all taxes • {product.price >= 499 ? 'Free Delivery' : '₹40 Delivery on orders below ₹499'}
+              </p>
+            </div>
+
+            {/* Flipkart-Style Promotional Offers Box */}
+            <div className="bg-emerald-50/70 rounded-2xl p-3.5 border border-emerald-200/80 space-y-1.5 text-xs text-stone-700">
+              <div className="font-bold text-emerald-800 flex items-center">
+                <Award className="w-3.5 h-3.5 mr-1 text-emerald-600" />
+                Available Offers &amp; Discounts:
+              </div>
+              <ul className="space-y-1 text-[11px] text-stone-600 list-disc list-inside">
+                <li><strong>Bank Offer:</strong> Extra 5% cashback on UPI, RuPay Cards &amp; Net Banking</li>
+                <li><strong>Special Gift Perk:</strong> Free handwritten artisan gift note card</li>
+                <li><strong>NestAssured:</strong> 7 Days Replacement Policy &amp; 100% Genuine Quality</li>
+              </ul>
+            </div>
+
+            {/* Pincode Delivery Estimator (Flipkart Style) */}
+            <div className="p-4 bg-stone-50 rounded-2xl border border-stone-200/80 space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-stone-700 flex items-center">
+                  <MapPin className="w-3.5 h-3.5 mr-1 text-rose-600" />
+                  Deliver to Indian PIN Code:
+                </span>
+                {pincodeStatus.checked && (
+                  <span className="text-[11px] text-emerald-700 font-bold flex items-center">
+                    <CheckCircle2 className="w-3 h-3 mr-1" />
+                    Available in {pincodeStatus.city}
+                  </span>
+                )}
+              </div>
+              <form onSubmit={handleCheckPincode} className="flex gap-2">
+                <input
+                  type="text"
+                  value={pincode}
+                  onChange={(e) => setPincode(e.target.value)}
+                  maxLength={6}
+                  placeholder="Enter 6-digit PIN"
+                  className="px-3 py-1.5 rounded-xl border border-stone-300 text-xs w-44 focus:ring-2 focus:ring-rose-500 outline-none bg-white font-mono"
+                />
+                <button
+                  type="submit"
+                  className="px-4 py-1.5 rounded-xl bg-stone-900 hover:bg-black text-white text-xs font-bold transition-colors shadow-xs"
+                >
+                  Check
+                </button>
+              </form>
+              {pincodeStatus.checked && (
+                <div className="text-[11px] text-stone-600 space-y-1 pt-1.5 border-t border-stone-200">
+                  <div className="flex items-center space-x-2">
+                    <Truck className="w-3.5 h-3.5 text-stone-500" />
+                    <span>
+                      Delivery by <strong>{pincodeStatus.estDays}</strong> |{' '}
+                      <span className="text-emerald-600 font-bold">
+                        {product.price >= 499 ? 'FREE Delivery' : 'Standard Delivery'}
+                      </span>
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Cash on Delivery Available</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Seller Information Card (Flipkart Style) */}
+            <div className="p-4 bg-white rounded-2xl border border-stone-200/90 shadow-xs space-y-2">
+              <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center space-x-2">
+                  <Store className="w-4 h-4 text-rose-600" />
+                  <span className="font-bold text-stone-800">
+                    Sold by: <span className="text-rose-600 font-semibold">{product.seller?.sellerProfile?.storeName || product.seller?.name || 'TechNest India Retail'}</span>
+                  </span>
+                </div>
+                <div className="inline-flex items-center bg-emerald-700 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
+                  <span>{product.seller?.sellerProfile?.rating || '4.8'}</span>
+                  <Star className="w-2.5 h-2.5 ml-0.5 fill-white" />
+                </div>
+              </div>
+              <div className="flex items-center justify-between text-[11px] text-stone-500 pt-1 border-t border-stone-100">
+                <span>GSTIN: {product.seller?.sellerProfile?.gstin || '29AABCU9603R1ZM'} (Verified)</span>
+                <span>Ships from {product.seller?.sellerProfile?.city || 'Bengaluru'}, {product.seller?.sellerProfile?.state || 'Karnataka'}</span>
+              </div>
+              <div className="flex items-center space-x-4 text-[11px] text-stone-600 pt-1">
+                <span className="flex items-center">
+                  <RefreshCw className="w-3 h-3 mr-1 text-blue-600" />
+                  7 Days Replacement
+                </span>
+                <span className="flex items-center">
+                  <ShieldCheck className="w-3 h-3 mr-1 text-emerald-600" />
+                  GST Invoice Available
+                </span>
+              </div>
+            </div>
+
+            {/* Highlights (if any) */}
+            {product.highlights && product.highlights.length > 0 && (
+              <div className="pt-2 border-t border-stone-100 space-y-2">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-stone-400">
+                  Key Highlights
+                </h3>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs text-stone-700">
+                  {product.highlights.map((h, i) => (
+                    <li key={i} className="flex items-center space-x-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0" />
+                      <span>{h}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {/* Description */}
             <div className="pt-2 border-t border-stone-100">
               <h3 className="text-xs font-bold uppercase tracking-wider text-stone-400 mb-2">
-                Gift Details & Description
+                Product Details
               </h3>
               <p className="text-stone-600 leading-relaxed text-sm whitespace-pre-line">
                 {product.description}
@@ -502,19 +690,45 @@ const ProductDetailsPage = () => {
           </div>
 
 
-          {/* Value Badges */}
-          <div className="bg-stone-50 rounded-3xl p-6 border border-stone-200 space-y-3">
-            <div className="flex items-center space-x-3 text-xs text-stone-600">
+            {/* Specifications Section (Flipkart Style) */}
+            {product.specifications && Object.keys(product.specifications).length > 0 && (
+              <div className="pt-3 border-t border-stone-100 space-y-2">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-stone-400">
+                  Specifications
+                </h3>
+                <div className="border border-stone-200 rounded-2xl overflow-hidden text-xs">
+                  {Object.entries(product.specifications).map(([k, v], idx) => (
+                    <div
+                      key={k}
+                      className={`grid grid-cols-3 p-2.5 ${
+                        idx % 2 === 0 ? 'bg-stone-50/70' : 'bg-white'
+                      }`}
+                    >
+                      <span className="font-medium text-stone-500 capitalize">{k}</span>
+                      <span className="col-span-2 font-semibold text-stone-800">{v}</span>
+                    </div>
+                  ))}
+                  <div className="grid grid-cols-3 p-2.5 bg-stone-50/70">
+                    <span className="font-medium text-stone-500">Country of Origin</span>
+                    <span className="col-span-2 font-semibold text-stone-800">India 🇮🇳</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+          {/* Flipkart-Style Trust Badges */}
+          <div className="bg-stone-50 rounded-3xl p-5 border border-stone-200 space-y-2.5">
+            <div className="flex items-center space-x-3 text-xs text-stone-700">
               <Truck className="w-4 h-4 text-rose-600 shrink-0" />
-              <span>Express delivery with delicate gift crate handling</span>
+              <span><strong>Ekart &amp; BlueDart Express:</strong> Delivered in secure, tamper-proof packaging</span>
             </div>
-            <div className="flex items-center space-x-3 text-xs text-stone-600">
+            <div className="flex items-center space-x-3 text-xs text-stone-700">
               <HeartHandshake className="w-4 h-4 text-rose-600 shrink-0" />
-              <span>Complimentary handwritten greeting card option at checkout</span>
+              <span><strong>Personalised Gifting:</strong> Free handwritten card &amp; luxury gift-wrapping available</span>
             </div>
-            <div className="flex items-center space-x-3 text-xs text-stone-600">
+            <div className="flex items-center space-x-3 text-xs text-stone-700">
               <ShieldCheck className="w-4 h-4 text-rose-600 shrink-0" />
-              <span>100% Quality guarantee on every item</span>
+              <span><strong>NestAssured Guarantee:</strong> 100% genuine products with 7-Day hassle-free replacement</span>
             </div>
           </div>
         </div>

@@ -51,4 +51,16 @@ const adminOnly = (req, res, next) => {
   }
 };
 
-module.exports = { protect, adminOnly };
+// Middleware to restrict access to users with role = "seller" or "admin"
+const sellerOnly = (req, res, next) => {
+  if (req.user && (req.user.role === 'seller' || req.user.role === 'admin')) {
+    next();
+  } else {
+    res.status(403).json({
+      success: false,
+      message: 'Access denied: Active seller account required. Please register your store.',
+    });
+  }
+};
+
+module.exports = { protect, adminOnly, sellerOnly };

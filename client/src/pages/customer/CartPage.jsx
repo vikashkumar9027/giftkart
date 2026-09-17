@@ -19,9 +19,9 @@ const CartPage = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  // Free shipping threshold
-  const freeShippingThreshold = 50;
-  const shippingFee = subtotal >= freeShippingThreshold || subtotal === 0 ? 0 : 7.99;
+  // Free shipping threshold in INR (₹499)
+  const freeShippingThreshold = 499;
+  const shippingFee = subtotal >= freeShippingThreshold || subtotal === 0 ? 0 : 40;
   const grandTotal = subtotal + shippingFee;
 
   if (cartItems.length === 0) {

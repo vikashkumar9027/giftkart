@@ -9,7 +9,9 @@ const occasions = [
   { id: 'Birthday', label: 'Birthday Gifts', emoji: '🎂' },
   { id: 'Anniversary', label: 'Anniversary Gifts', emoji: '💍' },
   { id: 'Wedding', label: 'Wedding Gifts', emoji: '💒' },
-  { id: 'Festival', label: 'Festival Gifts', emoji: '🪔' },
+  { id: 'Festival', label: 'Festive & Diwali', emoji: '🪔' },
+  { id: 'Valentine', label: 'Romance & Valentine', emoji: '💖' },
+  { id: 'Personalised', label: 'Custom Keepsakes', emoji: '✂️' },
   { id: 'Corporate', label: 'Corporate Gifts', emoji: '💼' },
 ];
 
@@ -42,23 +44,31 @@ const OccasionSection = () => {
         <div>
           <div className="flex items-center space-x-2 text-rose-600 text-xs font-bold uppercase tracking-wider mb-2">
             <Sparkles className="w-4 h-4" />
-            <span>Gifts by Occasion</span>
+            <span>Dedicated Gift Options</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-serif font-bold text-stone-900">
             Find the Perfect Gift for Every Celebration
           </h2>
           <p className="mt-2 text-sm text-stone-500 max-w-xl">
-            Celebrate life’s unforgettable chapters with gifts curated specifically for each special moment.
+            Celebrate life’s milestone moments with gifts curated specifically for Birthdays, Anniversaries, Weddings &amp; Festivals.
           </p>
         </div>
 
-        <Link
-          to={`/shop?occasion=${encodeURIComponent(activeOccasion)}`}
-          className="inline-flex items-center text-sm font-bold text-rose-600 hover:text-rose-700 transition-colors"
-        >
-          <span>View all {activeOccasion} gifts</span>
-          <ArrowRight className="w-4 h-4 ml-1.5" />
-        </Link>
+        <div className="flex items-center space-x-3">
+          <Link
+            to="/gifts"
+            className="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-rose-50 text-rose-700 hover:bg-rose-100 transition-colors border border-rose-200"
+          >
+            <span>🎁 Explore Gift Studio</span>
+          </Link>
+          <Link
+            to={`/gifts?occasion=${encodeURIComponent(activeOccasion)}`}
+            className="inline-flex items-center text-sm font-bold text-rose-600 hover:text-rose-700 transition-colors"
+          >
+            <span>View all {activeOccasion} gifts</span>
+            <ArrowRight className="w-4 h-4 ml-1.5" />
+          </Link>
+        </div>
       </div>
 
       {/* Occasion Tabs */}

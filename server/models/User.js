@@ -28,8 +28,18 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['customer', 'admin'],
+      enum: ['customer', 'seller', 'admin'],
       default: 'customer',
+    },
+    sellerProfile: {
+      storeName: { type: String, trim: true, default: '' },
+      gstin: { type: String, trim: true, default: '' },
+      city: { type: String, trim: true, default: '' },
+      state: { type: String, trim: true, default: '' },
+      pincode: { type: String, trim: true, default: '' },
+      phone: { type: String, trim: true, default: '' },
+      rating: { type: Number, default: 4.8 },
+      isVerified: { type: Boolean, default: true },
     },
   },
   {

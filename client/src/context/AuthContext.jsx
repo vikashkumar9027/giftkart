@@ -74,6 +74,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateUser = (updatedUser) => {
+    setUser(updatedUser);
+    localStorage.setItem('giftnest_user', JSON.stringify(updatedUser));
+  };
+
   const isAuthenticated = !!token && !!user;
   const isAdmin = isAuthenticated && user.role === 'admin';
 
@@ -89,6 +94,7 @@ export const AuthProvider = ({ children }) => {
         register,
         logout,
         refreshUser,
+        updateUser,
       }}
     >
       {children}

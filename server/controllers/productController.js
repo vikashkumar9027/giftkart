@@ -10,6 +10,8 @@ const getProducts = async (req, res, next) => {
       search,
       category,
       occasion,
+      recipient,
+      isGift,
       featured,
       sort,
       minPrice,
@@ -46,7 +48,17 @@ const getProducts = async (req, res, next) => {
 
     // 3. Filter by Occasion
     if (occasion && occasion !== 'all') {
-      query.occasion = new RegExp(`^${occasion}$`, 'i');
+      query.occasion = new RegExp(occasion, 'i');
+    }
+
+    // 3b. Filter by Recipient (For Her, For Him, Couples, etc.)
+    if (recipient && recipient !== 'all' && recipient !== 'Anyone') {
+      query.recipient = new RegExp(recipient, 'i');
+    }
+
+    // 3c. Filter by isGift
+    if (isGift === 'true' || isGift === true) {
+      query.isGift = true;
     }
 
     // 4. Filter by Featured
@@ -88,6 +100,7 @@ const getProducts = async (req, res, next) => {
 
     const products = await Product.find(query)
       .populate('category', 'name slug')
+      .populate('seller', 'name email sellerProfile')
       .sort(sortOption)
       .skip(skip)
       .limit(pageSize);
@@ -110,7 +123,9 @@ const getProducts = async (req, res, next) => {
 // @access  Public
 const getProductById = async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.id).populate('category', 'name slug');
+    const product = await Product.findById(req.params.id)
+      .populate('category', 'name slug')
+      .populate('seller', 'name email sellerProfile');
 
     if (!product) {
       return res.status(404).json({

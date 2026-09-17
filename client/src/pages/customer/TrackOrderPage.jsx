@@ -20,11 +20,11 @@ import api from '../../services/api';
 import { formatDateTime, formatDate } from '../../utils/formatters';
 
 const carrierBadges = {
-  FedEx: { color: 'bg-purple-50 text-purple-800 border-purple-200', tag: 'FedEx Express' },
-  BlueDart: { color: 'bg-blue-50 text-blue-800 border-blue-200', tag: 'BlueDart Air' },
-  DHL: { color: 'bg-amber-50 text-amber-900 border-amber-300', tag: 'DHL Express' },
-  USPS: { color: 'bg-sky-50 text-sky-800 border-sky-200', tag: 'USPS Priority' },
-  'Local Express': { color: 'bg-emerald-50 text-emerald-800 border-emerald-200', tag: 'Local Fleet' },
+  'Ekart Logistics': { color: 'bg-blue-50 text-blue-800 border-blue-200', tag: 'Ekart Logistics' },
+  'Delhivery': { color: 'bg-amber-50 text-amber-900 border-amber-300', tag: 'Delhivery Surface' },
+  'BlueDart Express': { color: 'bg-emerald-50 text-emerald-800 border-emerald-200', tag: 'BlueDart Air' },
+  'DTDC Express': { color: 'bg-purple-50 text-purple-800 border-purple-200', tag: 'DTDC Express' },
+  'India Post': { color: 'bg-rose-50 text-rose-800 border-rose-200', tag: 'Speed Post' },
 };
 
 const statusOrder = [
@@ -136,17 +136,17 @@ const TrackOrderPage = () => {
         {/* Quick Demo Button Suggestions */}
         <div className="mt-4 pt-3 border-t border-stone-100 flex flex-wrap items-center gap-2 text-xs text-stone-500">
           <span className="font-semibold text-[11px] uppercase tracking-wider text-stone-400">
-            Try Demo Lookups:
+            Try Demo Indian Lookups:
           </span>
           <button
             type="button"
             onClick={() => {
-              setQuery('FED-');
-              fetchTracking('FED-');
+              setQuery('EKT-');
+              fetchTracking('EKT-');
             }}
             className="px-2.5 py-1 bg-stone-100 hover:bg-stone-200 rounded-lg text-[11px] font-mono text-stone-700"
           >
-            FedEx Express
+            Ekart Logistics (EKT-)
           </button>
           <button
             type="button"
@@ -156,7 +156,17 @@ const TrackOrderPage = () => {
             }}
             className="px-2.5 py-1 bg-stone-100 hover:bg-stone-200 rounded-lg text-[11px] font-mono text-stone-700"
           >
-            BlueDart Air
+            BlueDart Air (BLU-)
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setQuery('DEL-');
+              fetchTracking('DEL-');
+            }}
+            className="px-2.5 py-1 bg-stone-100 hover:bg-stone-200 rounded-lg text-[11px] font-mono text-stone-700"
+          >
+            Delhivery (DEL-)
           </button>
           <Link
             to="/orders"

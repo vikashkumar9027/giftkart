@@ -13,6 +13,7 @@ const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const bannerRoutes = require('./routes/bannerRoutes');
 const galleryRoutes = require('./routes/galleryRoutes');
+const sellerRoutes = require('./routes/sellerRoutes');
 
 // Initialize express app
 const app = express();
@@ -51,6 +52,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/banners', bannerRoutes);
 app.use('/api/gallery', galleryRoutes);
+app.use('/api/seller', sellerRoutes);
 
 // Error Handling Middlewares
 app.use(notFound);
