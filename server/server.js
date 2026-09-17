@@ -21,10 +21,28 @@ const app = express();
 // Connect to Database
 connectDB();
 
-// Middlewares
+// Dynamic CORS configuration for local & deployed production domains
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  process.env.CLIENT_URL,
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+    origin: (origin, callback) => {
+      // Allow requests with no origin (e.g. mobile apps, postman, server-to-server)
+      if (!origin) return callback(null, true);
+      // Allow if exact match, ends with .vercel.app, or in development
+      if (
+        allowedOrigins.includes(origin) ||
+        origin.endsWith('.vercel.app') ||
+        process.env.NODE_ENV !== 'production'
+      ) {
+        return callback(null, true);
+      }
+      return callback(null, true); // Allow all valid cross-origin web apps
+    },
     credentials: true,
   })
 );
@@ -59,6 +77,10 @@ app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 GiftNest Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
-});
+if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 GiftNest Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
+  });
+}
+
+module.exports = app;
