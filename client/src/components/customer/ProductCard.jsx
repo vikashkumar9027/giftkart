@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { ShoppingBag, Eye, Sparkles, Star, ShieldCheck, Plus, Minus } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ShoppingBag, Eye, Sparkles, Star, ShieldCheck, Plus, Minus, Zap } from 'lucide-react';
 import { formatCurrency, calculateDiscount } from '../../utils/formatters';
 import { useCart } from '../../context/CartContext';
 import { useToast } from '../common/Toast';
@@ -8,6 +8,7 @@ import { useToast } from '../common/Toast';
 const ProductCard = ({ product }) => {
   const { cartItems, addToCart, updateQuantity, removeFromCart } = useCart();
   const { showToast } = useToast();
+  const navigate = useNavigate();
 
   const isOutOfStock = product.stock <= 0;
   const mainImage =
@@ -37,6 +38,22 @@ const ProductCard = ({ product }) => {
     } else {
       showToast(result.message, 'error');
     }
+  };
+
+  const handleBuyNow = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (isOutOfStock) return;
+
+    if (quantityInCart === 0) {
+      const result = addToCart(product, 1);
+      if (!result.success) {
+        showToast(result.message, 'error');
+        return;
+      }
+    }
+    navigate('/checkout');
   };
 
   const handleIncrement = (e) => {
@@ -167,11 +184,12 @@ const ProductCard = ({ product }) => {
           </p>
         </div>
 
-        {/* Price & Add to Cart Stepper */}
-        <div className="mt-2.5 sm:mt-4 pt-2 sm:pt-3 border-t border-stone-100 flex items-center justify-between gap-1.5">
-          <div className="min-w-0">
-            <div className="flex items-baseline space-x-1">
-              <span className="text-sm sm:text-lg font-extrabold text-stone-900">
+        {/* Price & Actions: Cart + Direct Buy Now */}
+        <div className="mt-2.5 sm:mt-3 pt-2 sm:pt-2.5 border-t border-stone-100 space-y-2">
+          {/* Price and discount row */}
+          <div className="flex items-baseline justify-between gap-1">
+            <div className="flex items-baseline space-x-1 min-w-0">
+              <span className="text-sm sm:text-base font-extrabold text-stone-900 truncate">
                 {formatCurrency(product.price)}
               </span>
               {product.mrp && product.mrp > product.price && (
@@ -180,57 +198,82 @@ const ProductCard = ({ product }) => {
                 </span>
               )}
             </div>
-            <div className="flex items-center space-x-1 mt-0.5">
-              {discount > 0 && (
-                <span className="text-[9px] sm:text-[11px] font-bold text-emerald-600 shrink-0">
+            <div className="flex items-center space-x-1 shrink-0">
+              {discount > 0 ? (
+                <span className="text-[9px] sm:text-[10px] font-bold text-emerald-600">
                   {discount}% off
                 </span>
+              ) : (
+                <span className="text-[9px] text-stone-400 truncate">
+                  {product.price >= 499 ? 'Free Del.' : '+₹40'}
+                </span>
               )}
-              <span className="text-[9px] text-stone-400 hidden xs:inline truncate">
-                {product.price >= 499 ? 'Free Del.' : '+₹40'}
-              </span>
             </div>
           </div>
 
-          {/* Cart Stepper or Add Button */}
-          {quantityInCart > 0 ? (
-            <div className="flex items-center bg-rose-50 border border-rose-300 rounded-xl overflow-hidden shadow-xs shrink-0">
+          {/* Action Buttons: Add to Cart Stepper + Direct Buy Now Button */}
+          <div className="grid grid-cols-2 gap-1.5 pt-0.5">
+            {/* Cart Stepper or Add Button */}
+            {quantityInCart > 0 ? (
+              <div className="flex items-center justify-between bg-rose-50 border border-rose-300 rounded-xl px-1 py-0.5 shadow-xs">
+                <button
+                  type="button"
+                  onClick={handleDecrement}
+                  className="w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center text-rose-700 hover:bg-rose-200 active:scale-90 transition-all font-bold text-xs cursor-pointer"
+                  title="Decrease quantity"
+                  aria-label="Decrease quantity"
+                >
+                  <Minus className="w-3 h-3" />
+                </button>
+                <span className="text-xs font-extrabold text-rose-900 select-none">
+                  {quantityInCart}
+                </span>
+                <button
+                  type="button"
+                  onClick={handleIncrement}
+                  disabled={quantityInCart >= product.stock}
+                  className={`w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center text-rose-700 hover:bg-rose-200 active:scale-90 transition-all font-bold text-xs cursor-pointer ${
+                    quantityInCart >= product.stock ? 'opacity-40 cursor-not-allowed' : ''
+                  }`}
+                  title={quantityInCart >= product.stock ? 'Stock limit reached' : 'Increase quantity'}
+                  aria-label="Increase quantity"
+                >
+                  <Plus className="w-3 h-3" />
+                </button>
+              </div>
+            ) : (
               <button
-                onClick={handleDecrement}
-                className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-rose-700 hover:bg-rose-200 active:scale-90 transition-all font-bold text-sm"
-                title="Decrease quantity"
-              >
-                <Minus className="w-3 h-3" />
-              </button>
-              <span className="w-5 sm:w-7 text-center text-xs sm:text-sm font-extrabold text-rose-900 select-none">
-                {quantityInCart}
-              </span>
-              <button
-                onClick={handleIncrement}
-                disabled={quantityInCart >= product.stock}
-                className={`w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-rose-700 hover:bg-rose-200 active:scale-90 transition-all font-bold text-sm ${
-                  quantityInCart >= product.stock ? 'opacity-40 cursor-not-allowed' : ''
+                type="button"
+                onClick={handleAddToCart}
+                disabled={isOutOfStock}
+                className={`flex items-center justify-center space-x-1 px-2 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all shadow-xs border cursor-pointer ${
+                  isOutOfStock
+                    ? 'bg-stone-100 text-stone-400 cursor-not-allowed border-stone-200'
+                    : 'bg-white hover:bg-rose-50 text-rose-700 border-rose-200 active:scale-95'
                 }`}
-                title={quantityInCart >= product.stock ? 'Stock limit reached' : 'Increase quantity'}
+                title={isOutOfStock ? 'Product is sold out' : 'Add to Cart'}
               >
-                <Plus className="w-3 h-3" />
+                <ShoppingBag className="w-3 h-3 shrink-0" />
+                <span className="text-[11px] truncate">{isOutOfStock ? 'Sold' : 'Cart'}</span>
               </button>
-            </div>
-          ) : (
+            )}
+
+            {/* Direct Buy Now Button */}
             <button
-              onClick={handleAddToCart}
+              type="button"
+              onClick={handleBuyNow}
               disabled={isOutOfStock}
-              className={`flex items-center justify-center space-x-1 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all shadow-xs shrink-0 ${
+              className={`flex items-center justify-center space-x-1 px-2 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer ${
                 isOutOfStock
-                  ? 'bg-stone-100 text-stone-400 cursor-not-allowed border border-stone-200'
-                  : 'bg-rose-600 hover:bg-rose-700 text-white shadow-rose-200 hover:shadow-md active:scale-95'
+                  ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
+                  : 'bg-amber-500 hover:bg-amber-600 active:scale-95 text-stone-950 font-black shadow-amber-500/20'
               }`}
-              title={isOutOfStock ? 'Product is sold out' : 'Add to Cart'}
+              title={isOutOfStock ? 'Product is sold out' : 'Direct Buy Now'}
             >
-              <ShoppingBag className="w-3.5 h-3.5 shrink-0" />
-              <span className="text-[11px] sm:text-xs">{isOutOfStock ? 'Sold' : 'Add'}</span>
+              <Zap className="w-3 h-3 shrink-0 fill-stone-950 text-stone-950" />
+              <span className="text-[11px] truncate">Buy Now</span>
             </button>
-          )}
+          </div>
         </div>
       </div>
     </div>

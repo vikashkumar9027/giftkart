@@ -16,6 +16,7 @@ import {
   Award,
   CheckCircle2,
   Store,
+  Zap,
 } from 'lucide-react';
 import api from '../../services/api';
 import { formatCurrency, calculateDiscount } from '../../utils/formatters';
@@ -216,6 +217,29 @@ const ProductDetailsPage = () => {
     }
   };
 
+  const handleBuyNow = () => {
+    if (isOutOfStock) return;
+
+    const customization = {
+      recipientName: recipientName.trim(),
+      customText: customText.trim(),
+      customPhotoUrl: customPhotoUrl.trim(),
+      occasionBadge: product.occasion || '',
+    };
+
+    const packaging = {
+      name: selectedPackaging.name,
+      price: selectedPackaging.price,
+      ribbonColor: selectedRibbon,
+    };
+
+    const result = addToCart(product, quantity, customization, packaging);
+    if (result.success) {
+      navigate('/checkout');
+    } else {
+      showToast(result.message, 'error');
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
@@ -659,11 +683,12 @@ const ProductDetailsPage = () => {
                 )}
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 pt-2">
+              <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <button
+                  type="button"
                   onClick={handleAddToCart}
                   disabled={isOutOfStock}
-                  className={`flex-1 py-4 px-8 rounded-full font-bold text-sm flex items-center justify-center space-x-2 transition-all shadow-lg ${
+                  className={`flex-1 py-3.5 px-6 rounded-full font-bold text-sm flex items-center justify-center space-x-2 transition-all shadow-lg cursor-pointer ${
                     isOutOfStock
                       ? 'bg-stone-200 text-stone-400 cursor-not-allowed border border-stone-300 shadow-none'
                       : 'bg-rose-600 hover:bg-rose-700 text-white shadow-rose-200 hover:scale-102 active:scale-98'
@@ -679,11 +704,25 @@ const ProductDetailsPage = () => {
                   </span>
                 </button>
 
+                <button
+                  type="button"
+                  onClick={handleBuyNow}
+                  disabled={isOutOfStock}
+                  className={`flex-1 py-3.5 px-6 rounded-full font-black text-sm flex items-center justify-center space-x-2 transition-all shadow-lg cursor-pointer ${
+                    isOutOfStock
+                      ? 'bg-stone-200 text-stone-400 cursor-not-allowed border border-stone-300 shadow-none'
+                      : 'bg-amber-500 hover:bg-amber-600 active:scale-98 text-stone-950 shadow-amber-400/30 hover:scale-102'
+                  }`}
+                >
+                  <Zap className="w-5 h-5 fill-stone-950 text-stone-950" />
+                  <span>Buy Now Directly</span>
+                </button>
+
                 <Link
                   to="/cart"
-                  className="py-4 px-6 rounded-full font-bold text-sm text-stone-700 bg-stone-100 hover:bg-stone-200 text-center transition-colors"
+                  className="py-3.5 px-5 rounded-full font-bold text-sm text-stone-700 bg-stone-100 hover:bg-stone-200 text-center transition-colors flex items-center justify-center"
                 >
-                  View Cart
+                  Cart
                 </Link>
               </div>
             </div>

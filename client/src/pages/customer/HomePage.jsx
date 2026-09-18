@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Sparkles, ArrowRight, Gift, Award, Clock, HeartHandshake } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Sparkles, ArrowRight, Gift, Award, Clock, HeartHandshake, Search, X } from 'lucide-react';
 import api from '../../services/api';
 import HeroBanner from '../../components/customer/HeroBanner';
 import CategoryCard from '../../components/customer/CategoryCard';
@@ -13,6 +13,17 @@ const HomePage = () => {
   const [categories, setCategories] = useState([]);
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const navigate = useNavigate();
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchKeyword.trim()) {
+      navigate(`/shop?search=${encodeURIComponent(searchKeyword.trim())}`);
+    } else {
+      navigate('/shop');
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,7 +50,91 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div className="space-y-12 sm:space-y-16 pb-16">
+    <div className="space-y-8 sm:space-y-12 pb-16">
+      {/* 0. Front Page Top Search Bar */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
+        <div className="bg-gradient-to-r from-rose-600 via-rose-500 to-amber-500 rounded-3xl p-5 sm:p-7 shadow-xl text-white">
+          <div className="max-w-3xl mx-auto text-center space-y-3">
+            <div className="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-xs px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5 text-amber-200" />
+              <span>Search Handcrafted Gifts, Flowers & Hampers</span>
+            </div>
+            <h1 className="text-xl sm:text-3xl font-serif font-bold text-white tracking-tight">
+              Find the Perfect Gift for Every Celebration
+            </h1>
+
+            {/* Front Page Search Input & Search Button */}
+            <form onSubmit={handleSearch} className="relative flex items-center bg-white rounded-2xl p-1.5 sm:p-2 shadow-xl">
+              <Search className="w-5 h-5 text-stone-400 ml-2.5 sm:ml-3 shrink-0" />
+              <input
+                type="text"
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
+                placeholder="Search birthday gifts, chocolates, personalized watches, luxury hampers..."
+                className="w-full px-2 sm:px-3 py-2 text-xs sm:text-sm text-stone-900 bg-transparent outline-none placeholder:text-stone-400"
+              />
+              {searchKeyword && (
+                <button
+                  type="button"
+                  onClick={() => setSearchKeyword('')}
+                  className="p-1 text-stone-400 hover:text-stone-600 shrink-0 mr-1"
+                  aria-label="Clear search"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+              <button
+                type="submit"
+                className="shrink-0 px-5 sm:px-8 py-2.5 sm:py-3 bg-rose-600 hover:bg-rose-700 text-white text-xs sm:text-sm font-bold rounded-xl shadow-md shadow-rose-600/30 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer"
+              >
+                <Search className="w-4 h-4" />
+                <span>Search</span>
+              </button>
+            </form>
+
+            {/* Trending Search Shortcuts */}
+            <div className="flex items-center justify-center flex-wrap gap-2 text-xs pt-1">
+              <span className="text-rose-100 font-medium text-[11px] sm:text-xs">Quick Search:</span>
+              <button
+                type="button"
+                onClick={() => navigate('/shop?occasion=Birthday')}
+                className="bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-full text-[11px] font-semibold transition-colors cursor-pointer"
+              >
+                🎂 Birthday
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/shop?occasion=Anniversary')}
+                className="bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-full text-[11px] font-semibold transition-colors cursor-pointer"
+              >
+                💍 Anniversary
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/shop?category=chocolates')}
+                className="bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-full text-[11px] font-semibold transition-colors cursor-pointer"
+              >
+                🍫 Chocolates
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/shop?occasion=Personalised')}
+                className="bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-full text-[11px] font-semibold transition-colors cursor-pointer"
+              >
+                ✂️ Personalised
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/gifts')}
+                className="bg-amber-400 hover:bg-amber-300 text-stone-900 px-3 py-1 rounded-full text-[11px] font-bold shadow-xs transition-colors cursor-pointer"
+              >
+                🎁 Smart Gift Wizard →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* 1. Hero Section */}
       <HeroBanner />
 
