@@ -1,4 +1,8 @@
 const path = require('path');
+const dns = require('dns');
+try {
+  dns.setServers(['8.8.8.8', '8.8.4.4']);
+} catch (err) {}
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
 const cors = require('cors');
@@ -21,28 +25,10 @@ const app = express();
 // Connect to Database
 connectDB();
 
-// Dynamic CORS configuration for local & deployed production domains
-const allowedOrigins = [
-  'http://localhost:5173',
-  'http://127.0.0.1:5173',
-  process.env.CLIENT_URL,
-].filter(Boolean);
-
+// Permissive CORS configuration for Vercel, Render and Localhost
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (e.g. mobile apps, postman, server-to-server)
-      if (!origin) return callback(null, true);
-      // Allow if exact match, ends with .vercel.app, or in development
-      if (
-        allowedOrigins.includes(origin) ||
-        origin.endsWith('.vercel.app') ||
-        process.env.NODE_ENV !== 'production'
-      ) {
-        return callback(null, true);
-      }
-      return callback(null, true); // Allow all valid cross-origin web apps
-    },
+    origin: true, // Allow all origins with credentials for production flexibility
     credentials: true,
   })
 );
@@ -53,8 +39,8 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
 }
 
-// Health Check API
-app.get('/api/health', (req, res) => {
+// Health Check API (Accessible at /, /health, and /api/health)
+app.get(['/', '/health', '/api/health'], (req, res) => {
   res.status(200).json({
     status: 'healthy',
     application: 'GiftNest API',
@@ -63,14 +49,14 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/categories', categoryRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/banners', bannerRoutes);
-app.use('/api/gallery', galleryRoutes);
-app.use('/api/seller', sellerRoutes);
+// API Routes (Mounted under both /api and root / so any client URL format works)
+app.use(['/api/auth', '/auth'], authRoutes);
+app.use(['/api/categories', '/categories'], categoryRoutes);
+app.use(['/api/products', '/products'], productRoutes);
+app.use(['/api/orders', '/orders'], orderRoutes);
+app.use(['/api/banners', '/banners'], bannerRoutes);
+app.use(['/api/gallery', '/gallery'], galleryRoutes);
+app.use(['/api/seller', '/seller'], sellerRoutes);
 
 // Error Handling Middlewares
 app.use(notFound);
