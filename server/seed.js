@@ -351,7 +351,7 @@ const seedData = async () => {
         stock: 30,
         images: [
           'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80',
-          'https://images.unsplash.com/photo-1576014131341-fe148657423b?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=800&q=80',
         ],
         description: 'Traditional solid brass floating flower and tealight Urli featuring hand-engraved peacock finials and an antique golden lacquer finish. Ideal for entrance pooja decor, Diwali, and housewarming gifts.',
         highlights: [
@@ -666,7 +666,7 @@ const seedData = async () => {
       },
       {
         title: 'Gourmet Saffron & Dry Fruit Atelier',
-        image: 'https://images.unsplash.com/photo-1576014131341-fe148657423b?auto=format&fit=crop&w=800&q=80',
+        image: 'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=800&q=80',
         category: 'Gourmet',
         isActive: true,
       },
