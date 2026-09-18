@@ -1,4 +1,12 @@
+const dns = require('dns');
 const mongoose = require('mongoose');
+
+// Configure Google DNS fallback to prevent querySrv ECONNREFUSED on Windows
+try {
+  dns.setServers(['8.8.8.8', '8.8.4.4']);
+} catch (err) {
+  // Ignore in environments where setServers is restricted
+}
 
 let isConnected = false;
 
