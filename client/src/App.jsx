@@ -39,11 +39,16 @@ import AdminDeliveryPage from './pages/admin/AdminDeliveryPage';
 import AdminBannersPage from './pages/admin/AdminBannersPage';
 import AdminGalleryPage from './pages/admin/AdminGalleryPage';
 
+// Common Components
+import ScrollToTop from './components/common/ScrollToTop';
+
 function App() {
   return (
-    <Routes>
-      {/* Customer Storefront Routes */}
-      <Route path="/" element={<MainLayout />}>
+    <>
+      <ScrollToTop />
+      <Routes>
+        {/* Customer Storefront Routes */}
+        <Route path="/" element={<MainLayout />}>
         <Route index element={<HomePage />} />
         <Route path="shop" element={<ShopPage />} />
         <Route path="gifts" element={<GiftStudioPage />} />
@@ -89,6 +94,7 @@ function App() {
       {/* Fallback 404 Route */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </>
   );
 }
 

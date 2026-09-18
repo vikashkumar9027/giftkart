@@ -1,147 +1,181 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Sparkles, ArrowRight, ShieldCheck, HeartHandshake, Truck } from 'lucide-react';
-import api from '../../services/api';
-
-const defaultBanners = [
-  {
-    title: 'Celebrate Every Story with Handcrafted Gifts',
-    subtitle: 'Thoughtfully curated luxury gift boxes, everlasting preserved flowers, and bespoke personalized treasures for the ones you cherish.',
-    image: 'https://images.unsplash.com/photo-1513885535751-8b9238bd345a?auto=format&fit=crop&w=1800&q=80',
-    buttonText: 'Shop Now',
-    buttonLink: '/shop',
-  },
-  {
-    title: 'Timeless Anniversary Keepsakes & Romance',
-    subtitle: 'From gilded champagne flutes to custom wooden memories, honor your milestone with unforgettable elegance.',
-    image: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=1800&q=80',
-    buttonText: 'Explore Gifts',
-    buttonLink: '/shop?category=anniversary',
-  },
-];
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Search, Truck, ShieldCheck, Heart, Headphones, Sparkles, ArrowRight } from 'lucide-react';
 
 const HeroBanner = () => {
-  const [banners, setBanners] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchBanners = async () => {
-      try {
-        const res = await api.get('/banners');
-        if (res.data.success && res.data.banners.length > 0) {
-          setBanners(res.data.banners);
-        } else {
-          setBanners(defaultBanners);
-        }
-      } catch (err) {
-        console.warn('Failed to load dynamic banners, using fallback:', err);
-        setBanners(defaultBanners);
-      }
-    };
-    fetchBanners();
-  }, []);
-
-  // Auto slide carousel
-  useEffect(() => {
-    if (banners.length <= 1) return;
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % banners.length);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, [banners.length]);
-
-  const activeBanner = banners[currentIndex] || defaultBanners[0];
-
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + banners.length) % banners.length);
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      navigate('/shop');
+    }
   };
 
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % banners.length);
-  };
+  const occasionChips = [
+    { label: '🎂 Birthday', link: '/shop?occasion=Birthday' },
+    { label: '❤️ Anniversary', link: '/shop?occasion=Anniversary' },
+    { label: '🌹 Flowers', link: '/shop?category=flowers' },
+    { label: '🍫 Chocolates', link: '/shop?category=chocolates' },
+    { label: '🎁 Personalized', link: '/shop?occasion=Personalised' },
+  ];
+
+  const trustFeatures = [
+    {
+      icon: Truck,
+      iconBg: 'bg-rose-100 text-rose-600',
+      title: 'Free Delivery',
+      subtitle: 'On orders over ₹499',
+    },
+    {
+      icon: ShieldCheck,
+      iconBg: 'bg-purple-100 text-purple-600',
+      title: 'Secure Payments',
+      subtitle: '100% safe checkout',
+    },
+    {
+      icon: Heart,
+      iconBg: 'bg-emerald-100 text-emerald-600',
+      title: 'Curated with Love',
+      subtitle: 'Handpicked quality gifts',
+    },
+    {
+      icon: Headphones,
+      iconBg: 'bg-amber-100 text-amber-600',
+      title: '24/7 Support',
+      subtitle: "We're here to help anytime",
+    },
+  ];
 
   return (
-    <section className="relative overflow-hidden bg-stone-900 text-white rounded-3xl mx-4 sm:mx-6 lg:mx-8 my-6 shadow-2xl">
-      {/* Background Banner Image */}
-      <div className="relative min-h-[500px] sm:min-h-[560px] lg:min-h-[620px] flex items-center">
-        <img
-          key={activeBanner.image}
-          src={activeBanner.image}
-          alt={activeBanner.title}
-          className="absolute inset-0 w-full h-full object-cover object-center animate-fade-in filter brightness-[0.65]"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-stone-950/90 via-stone-950/50 to-transparent" />
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 space-y-6">
+      {/* Main Hero Card */}
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#d91b5c] via-[#eb3349] to-[#f45c43] text-white shadow-2xl p-6 sm:p-10 lg:p-12">
+        {/* Background decorative ambient circles */}
+        <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-white/10 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-amber-400/20 blur-3xl pointer-events-none" />
 
-        {/* Banner Content Container */}
-        <div className="relative z-10 max-w-3xl px-6 sm:px-12 lg:px-16 py-16 space-y-6">
-          <div className="inline-flex items-center space-x-2 bg-rose-600/90 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase shadow-lg">
-            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-            <span>Premium Gifting Collection</span>
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-center">
+          {/* Left Column: Headline, Subtitle, CTAs, Occasion Chips, Search */}
+          <div className="lg:col-span-7 space-y-5 sm:space-y-6">
+            {/* Top Pill Badge */}
+            <div className="inline-flex items-center space-x-1.5 bg-white/20 hover:bg-white/25 backdrop-blur-md px-4 py-1 rounded-full text-xs font-bold text-white tracking-wide border border-white/30 shadow-xs">
+              <span>Special Gifts</span>
+              <span className="text-rose-200">♥</span>
+              <span>Bigger Smiles</span>
+            </div>
+
+            {/* Main Headline */}
+            <h1 className="text-3xl sm:text-5xl lg:text-5xl xl:text-6xl font-extrabold text-white tracking-tight leading-[1.1]">
+              Find a Gift They&apos;ll Love
+            </h1>
+
+            {/* Subtitle */}
+            <p className="text-sm sm:text-base lg:text-lg text-rose-50/95 font-medium leading-relaxed max-w-xl">
+              Thoughtful gifts for birthdays, anniversaries and every special moment.
+            </p>
+
+            {/* Action Buttons Row */}
+            <div className="flex flex-wrap items-center gap-3 pt-1">
+              <Link
+                to="/shop"
+                className="inline-flex items-center justify-center space-x-2 px-6 sm:px-7 py-3 rounded-full bg-white text-rose-600 hover:text-rose-700 font-extrabold text-xs sm:text-sm shadow-xl shadow-rose-900/20 hover:bg-rose-50 active:scale-95 transition-all cursor-pointer"
+              >
+                <span>🎁 Explore Gifts →</span>
+              </Link>
+              <Link
+                to="/gifts"
+                className="inline-flex items-center justify-center space-x-2 px-6 sm:px-7 py-3 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md text-white font-extrabold text-xs sm:text-sm border border-white/40 shadow-lg active:scale-95 transition-all cursor-pointer"
+              >
+                <span>✨ Smart Gift Wizard ✨</span>
+              </Link>
+            </div>
+
+            {/* Occasion Chips Row */}
+            <div className="pt-1">
+              <div className="flex flex-wrap items-center gap-2">
+                {occasionChips.map((chip) => (
+                  <Link
+                    key={chip.label}
+                    to={chip.link}
+                    className="inline-flex items-center bg-white/20 hover:bg-white/30 active:scale-95 text-white text-xs sm:text-sm font-semibold px-3.5 py-1.5 rounded-full backdrop-blur-sm border border-white/25 shadow-xs transition-all cursor-pointer"
+                  >
+                    {chip.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Integrated Rounded Search Pill */}
+            <div className="pt-2 max-w-xl">
+              <form
+                onSubmit={handleSearch}
+                className="relative flex items-center bg-white rounded-full p-1.5 sm:p-2 shadow-2xl transition-all focus-within:ring-4 focus-within:ring-white/40"
+              >
+                <Search className="w-5 h-5 text-stone-400 ml-3.5 shrink-0" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search gifts, flowers, cakes..."
+                  className="w-full px-3 py-2 text-xs sm:text-sm text-stone-900 bg-transparent outline-none placeholder:text-stone-400 font-medium"
+                />
+                <button
+                  type="submit"
+                  className="shrink-0 px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 text-white text-xs sm:text-sm font-extrabold rounded-full shadow-md shadow-rose-600/30 transition-all active:scale-95 cursor-pointer"
+                >
+                  Search
+                </button>
+              </form>
+            </div>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold text-white tracking-tight leading-[1.15]">
-            {activeBanner.title}
-          </h1>
-
-          <p className="text-sm sm:text-base lg:text-lg text-stone-200 leading-relaxed max-w-xl font-light">
-            {activeBanner.subtitle}
-          </p>
-
-          <div className="pt-4 flex flex-wrap items-center gap-4">
-            <Link
-              to={activeBanner.buttonLink || '/shop'}
-              className="px-8 py-3.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm shadow-xl shadow-rose-900/40 hover:scale-105 active:scale-95 transition-all flex items-center space-x-2"
-            >
-              <span>{activeBanner.buttonText || 'Shop Now'}</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-
-            <Link
-              to="/shop"
-              className="px-8 py-3.5 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md text-white font-bold text-sm border border-white/30 hover:border-white/50 transition-all"
-            >
-              Explore Gifts
-            </Link>
+          {/* Right Column: 3D Festive Gifts Composition Image */}
+          <div className="lg:col-span-5 flex items-center justify-center lg:justify-end mt-4 lg:mt-0">
+            <div className="relative w-full max-w-[340px] sm:max-w-[400px] lg:max-w-[440px] group">
+              {/* Subtle ambient backglow */}
+              <div className="absolute inset-0 bg-white/20 rounded-full blur-2xl transform scale-90 -z-10" />
+              <img
+                src="/hero-gift-composition.png"
+                alt="Curated festive gifts and celebrations"
+                className="w-full h-auto object-contain drop-shadow-[0_20px_35px_rgba(0,0,0,0.35)] select-none pointer-events-none transition-transform duration-500 hover:scale-105"
+                loading="eager"
+              />
+            </div>
           </div>
         </div>
+      </section>
 
-        {/* Carousel Navigation Arrows */}
-        {banners.length > 1 && (
-          <div className="absolute bottom-8 right-8 z-10 flex items-center space-x-3">
-            <button
-              onClick={handlePrev}
-              className="p-3 rounded-full bg-stone-900/60 hover:bg-rose-600 text-white backdrop-blur-md transition-colors border border-white/10"
-              aria-label="Previous Slide"
+      {/* Trust Pillars Feature Strip (4 cards exactly from reference mockup) */}
+      <section className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+        {trustFeatures.map((item) => {
+          const Icon = item.icon;
+          return (
+            <div
+              key={item.title}
+              className="bg-white rounded-2xl p-3.5 sm:p-4 shadow-sm hover:shadow-md transition-shadow border border-stone-100 flex items-center space-x-3"
             >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button
-              onClick={handleNext}
-              className="p-3 rounded-full bg-stone-900/60 hover:bg-rose-600 text-white backdrop-blur-md transition-colors border border-white/10"
-              aria-label="Next Slide"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Feature Badges Footer */}
-      <div className="bg-stone-950/80 backdrop-blur-md border-t border-stone-800/80 px-6 py-4 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-medium text-stone-300">
-        <div className="flex items-center space-x-3 justify-center sm:justify-start">
-          <Truck className="w-4 h-4 text-rose-400 shrink-0" />
-          <span>Complimentary Express Delivery Over $50</span>
-        </div>
-        <div className="flex items-center space-x-3 justify-center">
-          <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-          <span>Safe & Secure Artisanal Packaging</span>
-        </div>
-        <div className="flex items-center space-x-3 justify-center sm:justify-end">
-          <HeartHandshake className="w-4 h-4 text-amber-400 shrink-0" />
-          <span>Handwritten Personalized Cards</span>
-        </div>
-      </div>
-    </section>
+              <div
+                className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center shrink-0 ${item.iconBg}`}
+              >
+                <Icon className="w-5 h-5" />
+              </div>
+              <div className="min-w-0">
+                <h4 className="text-xs sm:text-sm font-bold text-stone-900 truncate">
+                  {item.title}
+                </h4>
+                <p className="text-[11px] sm:text-xs text-stone-500 truncate">
+                  {item.subtitle}
+                </p>
+              </div>
+            </div>
+          );
+        })}
+      </section>
+    </div>
   );
 };
 

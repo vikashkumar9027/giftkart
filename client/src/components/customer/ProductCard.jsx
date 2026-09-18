@@ -159,7 +159,7 @@ const ProductCard = ({ product }) => {
 
           {/* Product Title */}
           <Link to={`/product/${product._id}`} className="block group-hover:text-rose-600 transition-colors">
-            <h3 className="text-xs sm:text-sm font-bold text-stone-900 line-clamp-1 leading-snug">
+            <h3 className="text-xs sm:text-sm font-bold text-stone-900 line-clamp-2 leading-snug">
               {product.name}
             </h3>
           </Link>
@@ -179,10 +179,6 @@ const ProductCard = ({ product }) => {
               </span>
             )}
           </div>
-
-          <p className="mt-1 text-[11px] sm:text-xs text-stone-500 line-clamp-2 leading-relaxed hidden sm:block">
-            {product.description}
-          </p>
         </div>
 
         {/* Price & Actions: Cart + Direct Buy Now */}
