@@ -17,6 +17,12 @@ import {
   CheckCircle2,
   Store,
   Zap,
+  Maximize2,
+  Minimize2,
+  ZoomIn,
+  ChevronLeft,
+  ChevronRight,
+  X,
 } from 'lucide-react';
 import api from '../../services/api';
 import { formatCurrency, calculateDiscount } from '../../utils/formatters';
@@ -79,6 +85,29 @@ const ProductDetailsPage = () => {
   const [selectedPackaging, setSelectedPackaging] = useState(packagingOptions[0]);
   const [selectedRibbon, setSelectedRibbon] = useState(ribbonColors[0].name);
   const [isCustomizing, setIsCustomizing] = useState(false);
+
+  // Flipkart & Amazon style full screen image modal
+  const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
+  const [isZoomed, setIsZoomed] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setIsFullscreenOpen(false);
+        setIsZoomed(false);
+      }
+    };
+    if (isFullscreenOpen) {
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', handleKeyDown);
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isFullscreenOpen]);
 
   // Flipkart-style Pincode Delivery Estimator
   const [pincode, setPincode] = useState('560001');
@@ -258,12 +287,16 @@ const ProductDetailsPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
         {/* Left Column: Image Gallery */}
         <div className="space-y-4">
-          {/* Main Large Image */}
-          <div className="relative aspect-square rounded-3xl overflow-hidden bg-stone-100 border border-stone-200 shadow-md">
+          {/* Main Large Image (Clickable to open Fullscreen Lightbox) */}
+          <div
+            onClick={() => setIsFullscreenOpen(true)}
+            className="group relative aspect-square rounded-3xl overflow-hidden bg-stone-100 border border-stone-200 shadow-md cursor-zoom-in"
+            title="Click to open full screen photo with details (Flipkart & Amazon style)"
+          >
             <img
               src={selectedImage}
               alt={product.name}
-              className="w-full h-full object-cover object-center"
+              className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
             />
             {product.isFeatured && (
               <span className="absolute top-4 left-4 bg-rose-600 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center shadow-lg">
@@ -286,6 +319,12 @@ const ProductDetailsPage = () => {
                 ? `Only ${product.stock} Units Remaining`
                 : 'In Stock & Ready to Ship'}
             </span>
+
+            {/* Flipkart & Amazon style full screen zoom hint */}
+            <div className="absolute bottom-4 right-4 bg-stone-900/85 hover:bg-black text-white px-3 py-1.5 rounded-full text-xs font-bold flex items-center space-x-1.5 shadow-lg backdrop-blur-xs transition-all pointer-events-none">
+              <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
+              <span>Full Screen View</span>
+            </div>
           </div>
 
           {/* Thumbnail Gallery Row */}
@@ -787,10 +826,169 @@ const ProductDetailsPage = () => {
               View All
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
             {relatedProducts.map((p) => (
               <ProductCard key={p._id} product={p} />
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Flipkart & Amazon Style Fullscreen Image Lightbox Modal */}
+      {isFullscreenOpen && (
+        <div className="fixed inset-0 z-50 bg-stone-950/95 backdrop-blur-md flex flex-col justify-between text-white animate-fade-in select-none">
+          {/* Top Header Bar */}
+          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/10 bg-black/40">
+            <div className="min-w-0 pr-4">
+              <h3 className="text-sm sm:text-base font-bold text-white truncate max-w-xl">
+                {product.name}
+              </h3>
+              <p className="text-xs text-stone-400 mt-0.5">
+                Photo {((product.images || [selectedImage]).indexOf(selectedImage) + 1) || 1} of {(product.images && product.images.length) || 1} • Tap image to toggle zoom
+              </p>
+            </div>
+
+            <div className="flex items-center space-x-3 shrink-0">
+              <button
+                type="button"
+                onClick={() => setIsZoomed(!isZoomed)}
+                className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
+                title={isZoomed ? "Reset Zoom" : "Zoom In"}
+              >
+                {isZoomed ? <Minimize2 className="w-5 h-5 text-amber-300" /> : <ZoomIn className="w-5 h-5" />}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsFullscreenOpen(false);
+                  setIsZoomed(false);
+                }}
+                className="p-2 rounded-full bg-white/10 hover:bg-rose-600 text-white transition-colors cursor-pointer"
+                title="Close Full Screen"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Center High-Res Image View Area */}
+          <div className="relative flex-1 flex items-center justify-center p-4 overflow-hidden">
+            {/* Previous Photo Button */}
+            {product.images && product.images.length > 1 && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const list = product.images;
+                  const currIdx = list.indexOf(selectedImage);
+                  const prevIdx = (currIdx - 1 + list.length) % list.length;
+                  setSelectedImage(list[prevIdx]);
+                }}
+                className="absolute left-4 z-10 p-3 rounded-full bg-white/15 hover:bg-white/30 text-white transition-all shadow-xl active:scale-95 cursor-pointer"
+                title="Previous Image"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+            )}
+
+            {/* Main Interactive Zoom Image */}
+            <div className="w-full h-full flex items-center justify-center overflow-auto p-2">
+              <img
+                src={selectedImage}
+                alt={product.name}
+                onClick={() => setIsZoomed(!isZoomed)}
+                className={`max-h-[60vh] sm:max-h-[70vh] max-w-full object-contain transition-all duration-300 rounded-2xl cursor-pointer ${
+                  isZoomed ? 'scale-150 cursor-zoom-out' : 'scale-100 hover:scale-102 cursor-zoom-in'
+                }`}
+              />
+            </div>
+
+            {/* Next Photo Button */}
+            {product.images && product.images.length > 1 && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const list = product.images;
+                  const currIdx = list.indexOf(selectedImage);
+                  const nextIdx = (currIdx + 1) % list.length;
+                  setSelectedImage(list[nextIdx]);
+                }}
+                className="absolute right-4 z-10 p-3 rounded-full bg-white/15 hover:bg-white/30 text-white transition-all shadow-xl active:scale-95 cursor-pointer"
+                title="Next Image"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+            )}
+          </div>
+
+          {/* Bottom Bar: Thumbnails + Details & Direct Purchase */}
+          <div className="p-4 sm:p-5 border-t border-white/10 bg-black/60 flex flex-col sm:flex-row items-center justify-between gap-4">
+            {/* Thumbnails Row */}
+            {product.images && product.images.length > 1 ? (
+              <div className="flex items-center space-x-2.5 overflow-x-auto max-w-full pb-1 scrollbar-none">
+                {product.images.map((img, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setSelectedImage(img)}
+                    className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden border-2 shrink-0 transition-all cursor-pointer ${
+                      selectedImage === img
+                        ? 'border-rose-500 ring-2 ring-rose-400 scale-105'
+                        : 'border-white/20 opacity-60 hover:opacity-100'
+                    }`}
+                  >
+                    <img src={img} alt={`Thumb ${idx}`} className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="text-xs text-stone-400 hidden sm:block">
+                Exclusive Handcrafted Artisan Series
+              </div>
+            )}
+
+            {/* Details & Actions */}
+            <div className="flex items-center space-x-4 shrink-0 w-full sm:w-auto justify-between sm:justify-end">
+              <div>
+                <div className="text-base sm:text-xl font-black text-white">
+                  {formatCurrency(product.price)}
+                </div>
+                {product.mrp && product.mrp > product.price && (
+                  <span className="text-xs font-bold text-emerald-400">
+                    {calculateDiscount(product.mrp, product.price)}% OFF
+                  </span>
+                )}
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleAddToCart();
+                  }}
+                  disabled={isOutOfStock}
+                  className="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-bold text-xs transition-all active:scale-95 flex items-center space-x-1.5 cursor-pointer"
+                >
+                  <ShoppingBag className="w-4 h-4" />
+                  <span>Add to Cart</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsFullscreenOpen(false);
+                    handleBuyNow();
+                  }}
+                  disabled={isOutOfStock}
+                  className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-stone-950 font-black text-xs transition-all active:scale-95 shadow-md shadow-amber-400/20 flex items-center space-x-1.5 cursor-pointer"
+                >
+                  <Zap className="w-4 h-4 fill-stone-950 text-stone-950" />
+                  <span>Buy Now</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

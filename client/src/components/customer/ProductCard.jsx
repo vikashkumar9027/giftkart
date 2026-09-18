@@ -83,8 +83,12 @@ const ProductCard = ({ product }) => {
 
   return (
     <div className="group relative bg-white rounded-2xl overflow-hidden border border-stone-200/80 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full">
-      {/* Product Image Area: Fixed square ratio on ALL screen sizes */}
-      <div className="relative aspect-square w-full overflow-hidden bg-stone-100 shrink-0">
+      {/* Product Image Area: Clickable Link to Product Details */}
+      <Link
+        to={`/product/${product._id}`}
+        className="relative aspect-square w-full overflow-hidden bg-stone-100 shrink-0 block cursor-pointer group/img"
+        title={`View ${product.name} details & full screen photos`}
+      >
         <img
           src={mainImage}
           alt={product.name}
@@ -128,17 +132,14 @@ const ProductCard = ({ product }) => {
             : 'In Stock'}
         </span>
 
-        {/* Quick View Button on Hover (Desktop) */}
-        <div className="absolute inset-0 bg-stone-900/25 opacity-0 group-hover:opacity-100 transition-opacity hidden sm:flex items-center justify-center p-4">
-          <Link
-            to={`/product/${product._id}`}
-            className="bg-white text-stone-900 hover:text-rose-600 px-4 py-2 rounded-full text-xs font-bold shadow-lg flex items-center space-x-1.5 transition-colors transform translate-y-2 group-hover:translate-y-0 duration-300"
-          >
-            <Eye className="w-3.5 h-3.5" />
-            <span>View Details</span>
-          </Link>
+        {/* Quick View Pill on Hover */}
+        <div className="absolute inset-0 bg-stone-900/25 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-4">
+          <span className="bg-white/95 backdrop-blur-xs text-stone-900 px-4 py-2 rounded-full text-xs font-bold shadow-lg flex items-center space-x-1.5 transform translate-y-2 group-hover:translate-y-0 duration-300">
+            <Eye className="w-3.5 h-3.5 text-rose-600" />
+            <span>View Full Details</span>
+          </span>
         </div>
-      </div>
+      </Link>
 
       {/* Product Information */}
       <div className="p-2.5 sm:p-4 flex flex-col flex-1 justify-between">
