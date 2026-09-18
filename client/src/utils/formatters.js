@@ -8,6 +8,8 @@ export const formatCurrency = (amount) => {
   }).format(amount);
 };
 
+export const formatINR = formatCurrency;
+
 // Calculate percentage discount
 export const calculateDiscount = (mrp, price) => {
   if (!mrp || !price || Number(mrp) <= Number(price)) return 0;

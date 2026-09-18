@@ -50,9 +50,46 @@ const Navbar = () => {
 
   return (
     <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-stone-100 shadow-xs transition-all">
-      {/* Top Banner Bar - Indian Gifting & Shopping Promotion */}
-      <div className="bg-gradient-to-r from-rose-700 via-rose-600 to-amber-600 text-white text-xs py-1.5 px-4 text-center font-medium tracking-wide">
-        ✨ Free Express Delivery across India on orders above ₹499 | Cash on Delivery & Instant UPI available
+      {/* Top Banner Bar - Continuous TV News Channel Marquee */}
+      <div className="bg-gradient-to-r from-rose-800 via-rose-700 to-amber-700 text-white text-xs py-2 overflow-hidden border-b border-rose-900/40 relative select-none">
+        <div className="flex animate-marquee items-center space-x-8">
+          <span className="flex items-center space-x-2 shrink-0 font-medium">
+            <span className="text-amber-300 font-extrabold uppercase tracking-wider bg-rose-950/60 px-2 py-0.5 rounded text-[10px]">Breaking</span>
+            <span>✨ Free Express Delivery across India on all orders above ₹499</span>
+          </span>
+          <span className="text-amber-400 font-bold shrink-0">•</span>
+          <span className="flex items-center space-x-2 shrink-0 font-medium">
+            <span>⚡ Instant UPI, Google Pay, PhonePe &amp; Cash on Delivery Available</span>
+          </span>
+          <span className="text-amber-400 font-bold shrink-0">•</span>
+          <span className="flex items-center space-x-2 shrink-0 font-medium">
+            <span>🎁 Luxury Handcrafted Gift Packaging with Free Handwritten Calligraphy Notes</span>
+          </span>
+          <span className="text-amber-400 font-bold shrink-0">•</span>
+          <span className="flex items-center space-x-2 shrink-0 font-medium">
+            <span>🚚 Express Delivery via Ekart Logistics, BlueDart &amp; Delhivery Speed Logistics</span>
+          </span>
+          <span className="text-amber-400 font-bold shrink-0">•</span>
+
+          {/* Repeat once for seamless loop */}
+          <span className="flex items-center space-x-2 shrink-0 font-medium">
+            <span className="text-amber-300 font-extrabold uppercase tracking-wider bg-rose-950/60 px-2 py-0.5 rounded text-[10px]">Breaking</span>
+            <span>✨ Free Express Delivery across India on all orders above ₹499</span>
+          </span>
+          <span className="text-amber-400 font-bold shrink-0">•</span>
+          <span className="flex items-center space-x-2 shrink-0 font-medium">
+            <span>⚡ Instant UPI, Google Pay, PhonePe &amp; Cash on Delivery Available</span>
+          </span>
+          <span className="text-amber-400 font-bold shrink-0">•</span>
+          <span className="flex items-center space-x-2 shrink-0 font-medium">
+            <span>🎁 Luxury Handcrafted Gift Packaging with Free Handwritten Calligraphy Notes</span>
+          </span>
+          <span className="text-amber-400 font-bold shrink-0">•</span>
+          <span className="flex items-center space-x-2 shrink-0 font-medium">
+            <span>🚚 Express Delivery via Ekart Logistics, BlueDart &amp; Delhivery Speed Logistics</span>
+          </span>
+          <span className="text-amber-400 font-bold shrink-0">•</span>
+        </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -400,154 +437,218 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Off-Canvas Slide Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-b border-stone-200 px-4 pt-3 pb-6 space-y-4 animate-fade-in shadow-xl">
-          {/* Mobile Search */}
-          <form onSubmit={handleSearchSubmit} className="relative">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search gifts, flowers, occasions..."
-              className="w-full pl-10 pr-4 py-2 text-sm bg-stone-100 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-rose-500"
-            />
-            <Search className="w-4 h-4 text-stone-400 absolute left-3 top-3" />
-          </form>
+        <div className="fixed inset-0 z-50 md:hidden flex justify-end">
+          {/* Backdrop overlay */}
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs animate-fade-in"
+            onClick={() => setMobileMenuOpen(false)}
+          />
 
-          {/* Nav Links */}
-          <div className="flex flex-col space-y-2 pt-2">
-            {/* Dedicated Gift Options Button / Highlight */}
-            <Link
-              to="/gifts"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-between px-3.5 py-2.5 bg-gradient-to-r from-rose-50 to-amber-50 border border-rose-200 text-rose-700 font-bold rounded-xl shadow-xs"
-            >
-              <span className="flex items-center space-x-2">
-                <Gift className="w-5 h-5 text-rose-600" />
-                <span>🎁 Gifting Studio &amp; Occasions</span>
-              </span>
-              <span className="text-[10px] bg-rose-600 text-white font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Explore</span>
-            </Link>
+          {/* Drawer Panel */}
+          <div className="relative z-10 w-[85%] max-w-sm bg-white h-full shadow-2xl flex flex-col justify-between overflow-y-auto animate-fade-in">
+            <div className="p-5 space-y-5">
+              {/* Drawer Top Header */}
+              <div className="flex items-center justify-between pb-4 border-b border-stone-100">
+                <div className="flex items-center space-x-2">
+                  <div className="w-8 h-8 rounded-xl bg-rose-600 flex items-center justify-center text-white shadow-xs">
+                    <Gift className="w-4 h-4" />
+                  </div>
+                  <span className="font-serif font-bold text-lg text-stone-900">GiftNest</span>
+                </div>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2 rounded-xl text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
 
-            {/* Quick Occasions Grid in Mobile Drawer */}
-            <div className="grid grid-cols-2 gap-2 px-1">
+              {/* User Profile / Auth Status Bar */}
+              {isAuthenticated ? (
+                <div className="p-3.5 bg-gradient-to-r from-rose-50 to-amber-50 rounded-2xl border border-rose-100/60 flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-full bg-rose-600 text-white font-extrabold flex items-center justify-center shadow-xs shrink-0 text-base">
+                    {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs text-rose-600 font-bold uppercase tracking-wider">Namaste,</p>
+                    <p className="text-sm font-extrabold text-stone-900 truncate">{user?.name}</p>
+                    <p className="text-[11px] text-stone-500 truncate">{user?.email}</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="p-4 bg-stone-50 rounded-2xl border border-stone-100 space-y-2.5 text-center">
+                  <p className="text-xs text-stone-500 font-medium">Sign in to track orders &amp; unlock member perks</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link
+                      to="/login"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="py-2 px-3 text-xs font-bold text-stone-800 bg-white rounded-xl border border-stone-200 hover:bg-stone-100 shadow-xs"
+                    >
+                      Sign In
+                    </Link>
+                    <Link
+                      to="/register"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="py-2 px-3 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-xl shadow-xs"
+                    >
+                      Register
+                    </Link>
+                  </div>
+                </div>
+              )}
+
+              {/* Search Bar */}
+              <form onSubmit={handleSearchSubmit} className="relative">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search gifts, chocolates, hampers..."
+                  className="w-full pl-9 pr-4 py-2.5 text-xs bg-stone-100 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                />
+                <Search className="w-4 h-4 text-stone-400 absolute left-3 top-3" />
+              </form>
+
+              {/* Dedicated Gifting Studio Highlight */}
               <Link
-                to="/gifts?occasion=Birthday"
+                to="/gifts"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-xs p-2 rounded-lg bg-stone-50 hover:bg-rose-50 text-stone-700 font-medium flex items-center space-x-1.5 border border-stone-100"
+                className="flex items-center justify-between p-3.5 bg-gradient-to-r from-rose-600 to-rose-700 text-white font-bold rounded-2xl shadow-md shadow-rose-600/20"
               >
-                <span>🎂</span>
-                <span>Birthday Gifts</span>
+                <div className="flex items-center space-x-2.5">
+                  <span className="text-xl">🎁</span>
+                  <div>
+                    <div className="text-xs font-extrabold">Gifting Studio &amp; Wizard</div>
+                    <div className="text-[10px] text-rose-100 font-normal">Find by Occasion, Recipient &amp; Budget</div>
+                  </div>
+                </div>
+                <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-bold">Open →</span>
               </Link>
-              <Link
-                to="/gifts?occasion=Anniversary"
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-xs p-2 rounded-lg bg-stone-50 hover:bg-rose-50 text-stone-700 font-medium flex items-center space-x-1.5 border border-stone-100"
-              >
-                <span>💍</span>
-                <span>Anniversary</span>
-              </Link>
-              <Link
-                to="/gifts?occasion=Wedding"
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-xs p-2 rounded-lg bg-stone-50 hover:bg-rose-50 text-stone-700 font-medium flex items-center space-x-1.5 border border-stone-100"
-              >
-                <span>💒</span>
-                <span>Wedding</span>
-              </Link>
-              <Link
-                to="/gifts?occasion=Festival"
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-xs p-2 rounded-lg bg-stone-50 hover:bg-rose-50 text-stone-700 font-medium flex items-center space-x-1.5 border border-stone-100"
-              >
-                <span>🪔</span>
-                <span>Diwali &amp; Festive</span>
-              </Link>
+
+              {/* Quick Occasions Grid */}
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-wider text-stone-400 mb-2">
+                  Popular Celebrations
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <Link
+                    to="/gifts?occasion=Birthday"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-2.5 rounded-xl bg-stone-50 hover:bg-rose-50 text-stone-800 text-xs font-semibold flex items-center space-x-2 border border-stone-100"
+                  >
+                    <span className="text-base">🎂</span>
+                    <span>Birthday Gifts</span>
+                  </Link>
+                  <Link
+                    to="/gifts?occasion=Anniversary"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-2.5 rounded-xl bg-stone-50 hover:bg-rose-50 text-stone-800 text-xs font-semibold flex items-center space-x-2 border border-stone-100"
+                  >
+                    <span className="text-base">💍</span>
+                    <span>Anniversary</span>
+                  </Link>
+                  <Link
+                    to="/gifts?occasion=Wedding"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-2.5 rounded-xl bg-stone-50 hover:bg-rose-50 text-stone-800 text-xs font-semibold flex items-center space-x-2 border border-stone-100"
+                  >
+                    <span className="text-base">💒</span>
+                    <span>Wedding Gifts</span>
+                  </Link>
+                  <Link
+                    to="/gifts?occasion=Festival"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-2.5 rounded-xl bg-stone-50 hover:bg-rose-50 text-stone-800 text-xs font-semibold flex items-center space-x-2 border border-stone-100"
+                  >
+                    <span className="text-base">🪔</span>
+                    <span>Festive &amp; Diwali</span>
+                  </Link>
+                </div>
+              </div>
+
+              {/* Primary Navigation Links */}
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-wider text-stone-400 mb-2">
+                  Explore GiftNest
+                </div>
+                <div className="space-y-1">
+                  <Link
+                    to="/shop"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-between px-3 py-2 text-xs font-semibold text-stone-700 hover:bg-stone-50 rounded-xl"
+                  >
+                    <span>🛍️ Shop All Catalog</span>
+                    <span className="text-stone-400">→</span>
+                  </Link>
+                  <Link
+                    to="/track"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-between px-3 py-2 text-xs font-semibold text-stone-700 hover:bg-stone-50 rounded-xl"
+                  >
+                    <span>🚚 Track Live Shipment</span>
+                    <span className="text-stone-400">→</span>
+                  </Link>
+                  <Link
+                    to={isSeller ? "/seller/dashboard" : "/become-seller"}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-between px-3 py-2 text-xs font-semibold text-amber-800 bg-amber-50/70 hover:bg-amber-100/70 rounded-xl"
+                  >
+                    <span className="flex items-center space-x-1.5">
+                      <Store className="w-3.5 h-3.5 text-amber-600" />
+                      <span>{isSeller ? "Merchant Operations Hub" : "Become a Seller (Sell on GiftNest)"}</span>
+                    </span>
+                    <span className="text-amber-500">→</span>
+                  </Link>
+                </div>
+              </div>
             </div>
 
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.path}
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2 text-base font-medium text-stone-700 hover:bg-rose-50 hover:text-rose-600 rounded-xl transition-colors"
-              >
-                {link.name}
-              </Link>
-            ))}
-          </div>
-
-          <div className="border-t border-stone-100 pt-4">
-            {isAuthenticated ? (
-              <div className="space-y-2">
-                <div className="px-3 py-2 bg-stone-50 rounded-xl">
-                  <p className="text-xs text-stone-400">Signed in as</p>
-                  <p className="text-sm font-bold text-stone-800">{user?.name}</p>
-                  <p className="text-xs text-stone-500">{user?.email}</p>
+            {/* Bottom Actions for Authenticated User */}
+            {isAuthenticated && (
+              <div className="p-4 border-t border-stone-100 bg-stone-50/80 space-y-2">
+                <div className="grid grid-cols-2 gap-2">
+                  <Link
+                    to="/profile"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-center space-x-1.5 py-2 px-3 bg-white rounded-xl text-xs font-medium text-stone-700 border border-stone-200"
+                  >
+                    <User className="w-3.5 h-3.5 text-stone-400" />
+                    <span>My Profile</span>
+                  </Link>
+                  <Link
+                    to="/orders"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-center space-x-1.5 py-2 px-3 bg-white rounded-xl text-xs font-medium text-stone-700 border border-stone-200"
+                  >
+                    <Package className="w-3.5 h-3.5 text-stone-400" />
+                    <span>My Orders</span>
+                  </Link>
                 </div>
-                <Link
-                  to="/profile"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center px-3 py-2 text-sm text-stone-700 hover:bg-stone-50 rounded-xl"
-                >
-                  <User className="w-4 h-4 mr-3 text-stone-400" />
-                  My Profile
-                </Link>
-                <Link
-                  to="/orders"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center px-3 py-2 text-sm text-stone-700 hover:bg-stone-50 rounded-xl"
-                >
-                  <Package className="w-4 h-4 mr-3 text-stone-400" />
-                  My Orders
-                </Link>
-                <Link
-                  to="/track"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center px-3 py-2 text-sm text-stone-700 hover:bg-stone-50 rounded-xl"
-                >
-                  <Truck className="w-4 h-4 mr-3 text-stone-400" />
-                  Track Shipment
-                </Link>
+
                 {isAdmin && (
                   <Link
                     to="/admin/dashboard"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center px-3 py-2 text-sm text-amber-700 bg-amber-50 rounded-xl font-medium"
+                    className="flex items-center justify-center space-x-2 py-2 px-3 bg-amber-100/80 text-amber-900 rounded-xl text-xs font-bold"
                   >
-                    <ShieldAlert className="w-4 h-4 mr-3 text-amber-600" />
-                    Admin CMS
+                    <ShieldAlert className="w-3.5 h-3.5 text-amber-600" />
+                    <span>Admin CMS Management</span>
                   </Link>
                 )}
+
                 <button
                   onClick={() => {
                     setMobileMenuOpen(false);
                     logout();
                     navigate('/');
                   }}
-                  className="w-full flex items-center px-3 py-2 text-sm text-rose-600 hover:bg-rose-50 rounded-xl text-left"
+                  className="w-full flex items-center justify-center space-x-2 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 rounded-xl"
                 >
-                  <LogOut className="w-4 h-4 mr-3 text-rose-500" />
-                  Sign Out
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>Sign Out</span>
                 </button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 gap-3 pt-2">
-                <Link
-                  to="/login"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center py-2.5 px-4 border border-stone-200 rounded-xl text-sm font-medium text-stone-700 hover:bg-stone-50"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  to="/register"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center py-2.5 px-4 bg-rose-600 text-white rounded-xl text-sm font-medium shadow-sm hover:bg-rose-700"
-                >
-                  Register
-                </Link>
               </div>
             )}
           </div>

@@ -140,18 +140,18 @@ const ShopPage = () => {
         </Link>
       </div>
 
-      {/* Top Controls Bar: Search, Quick Gifts Toggle & Sort */}
-      <div className="bg-white rounded-3xl p-4 sm:p-6 shadow-sm border border-stone-200 mb-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      {/* Top Controls Bar: Search & Sort */}
+      <div className="bg-white rounded-2xl sm:rounded-3xl p-3 sm:p-5 shadow-xs border border-stone-200 mb-4 sm:mb-6 flex flex-col sm:flex-row items-center justify-between gap-3">
         {/* Search Bar */}
-        <form onSubmit={handleSearchSubmit} className="relative w-full md:w-80">
+        <form onSubmit={handleSearchSubmit} className="relative w-full sm:max-w-md">
           <input
             type="text"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="Search gifts or products..."
-            className="w-full pl-10 pr-10 py-2.5 text-sm bg-stone-50 rounded-2xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white transition-all"
+            placeholder="Search gifts, bouquets, chocolates..."
+            className="w-full pl-9 pr-9 py-2 sm:py-2.5 text-xs sm:text-sm bg-stone-50 rounded-xl sm:rounded-2xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white transition-all"
           />
-          <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5" />
+          <Search className="w-4 h-4 text-stone-400 absolute left-3 top-2.5 sm:top-3" />
           {searchInput && (
             <button
               type="button"
@@ -159,58 +159,31 @@ const ShopPage = () => {
                 setSearchInput('');
                 updateParam('search', '');
               }}
-              className="absolute right-3.5 top-3 text-stone-400 hover:text-stone-600"
+              className="absolute right-3 top-2.5 sm:top-3 text-stone-400 hover:text-stone-600"
             >
               <X className="w-4 h-4" />
             </button>
           )}
         </form>
 
-        {/* Middle Quick Toggles: All vs Gifts Only */}
-        <div className="flex items-center space-x-2 w-full md:w-auto justify-start">
-          <button
-            type="button"
-            onClick={() => updateParam('isGift', 'all')}
-            className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all ${
-              !isGiftParam
-                ? 'bg-stone-900 text-white shadow-xs'
-                : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
-            }`}
-          >
-            All Products
-          </button>
-          <button
-            type="button"
-            onClick={() => updateParam('isGift', isGiftParam ? 'all' : 'true')}
-            className={`flex items-center space-x-1.5 px-4 py-2 rounded-2xl text-xs font-bold transition-all border ${
-              isGiftParam
-                ? 'bg-rose-600 border-rose-600 text-white shadow-xs'
-                : 'bg-rose-50 border-rose-200 text-rose-700 hover:bg-rose-100'
-            }`}
-          >
-            <span>🎁</span>
-            <span>Gifts Only</span>
-          </button>
-        </div>
-
-        {/* Right side controls: Filter toggle (mobile) & Sort dropdown */}
-        <div className="flex items-center justify-between w-full md:w-auto space-x-3">
+        {/* Sort & Mobile Filter Controls */}
+        <div className="flex items-center justify-between w-full sm:w-auto gap-2">
           <button
             onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
-            className="md:hidden flex items-center space-x-2 px-4 py-2.5 rounded-2xl border border-stone-200 bg-stone-50 text-xs font-semibold text-stone-700"
+            className="lg:hidden flex items-center space-x-1.5 px-3 py-2 rounded-xl border border-stone-200 bg-stone-50 text-xs font-semibold text-stone-700"
           >
-            <Filter className="w-4 h-4 text-stone-500" />
+            <Filter className="w-3.5 h-3.5 text-stone-500" />
             <span>Filters</span>
           </button>
 
-          <div className="flex items-center space-x-2">
-            <ArrowUpDown className="w-4 h-4 text-stone-400 hidden sm:inline-block" />
+          <div className="flex items-center space-x-1.5 ml-auto sm:ml-0">
+            <ArrowUpDown className="w-3.5 h-3.5 text-stone-400 hidden sm:inline-block" />
             <span className="text-xs font-semibold text-stone-500 hidden sm:inline-block">Sort:</span>
             <select
               value={sortParam}
               onChange={(e) => updateParam('sort', e.target.value)}
               aria-label="Sort products"
-              className="text-xs font-semibold bg-stone-50 border border-stone-200 rounded-2xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-pointer text-stone-700"
+              className="text-xs font-semibold bg-stone-50 border border-stone-200 rounded-xl sm:rounded-2xl px-3 py-2 sm:py-2.5 focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-pointer text-stone-700"
             >
               <option value="newest">Newest Arrivals</option>
               <option value="price_asc">Price: Low to High</option>
@@ -467,14 +440,88 @@ const ShopPage = () => {
 
         {/* Right Product Grid Area */}
         <main className="lg:col-span-3">
+          {/* Flipkart & Amazon Style Single-Line Horizontal Filter Bar */}
+          <div className="flex items-center space-x-2 overflow-x-auto scrollbar-none pb-2 mb-3 -mx-4 px-4 sm:mx-0 sm:px-0">
+            <button
+              onClick={() => {
+                updateParam('occasion', 'all');
+                updateParam('isGift', 'all');
+                updateParam('category', 'all');
+              }}
+              className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
+                occasionParam === 'all' && !isGiftParam && categoryParam === 'all'
+                  ? 'bg-stone-900 text-white shadow-xs'
+                  : 'bg-white border border-stone-200 text-stone-700 hover:bg-stone-50'
+              }`}
+            >
+              All Gifts
+            </button>
+
+            <button
+              onClick={() => updateParam('isGift', isGiftParam ? 'all' : 'true')}
+              className={`shrink-0 flex items-center space-x-1 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all border ${
+                isGiftParam
+                  ? 'bg-rose-600 border-rose-600 text-white shadow-xs'
+                  : 'bg-white border-rose-200 text-rose-700 hover:bg-rose-50'
+              }`}
+            >
+              <span>🎁</span>
+              <span>Gifts Only</span>
+            </button>
+
+            {occasionsList.map((occ) => {
+              const isSelected = occasionParam.toLowerCase() === occ.toLowerCase();
+              const emojiMap = {
+                Birthday: '🎂',
+                Anniversary: '💍',
+                Wedding: '💒',
+                Festival: '🪔',
+                Valentine: '💐',
+                Personalised: '✂️',
+                Corporate: '👔',
+              };
+              return (
+                <button
+                  key={occ}
+                  onClick={() => updateParam('occasion', isSelected ? 'all' : occ)}
+                  className={`shrink-0 flex items-center space-x-1 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all border ${
+                    isSelected
+                      ? 'bg-rose-600 border-rose-600 text-white shadow-xs'
+                      : 'bg-white border-stone-200 text-stone-700 hover:bg-stone-50'
+                  }`}
+                >
+                  <span>{emojiMap[occ] || '✨'}</span>
+                  <span>{occ}</span>
+                </button>
+              );
+            })}
+
+            {categories.map((cat) => {
+              const isSelected = categoryParam === cat.slug || categoryParam === cat._id;
+              return (
+                <button
+                  key={cat._id}
+                  onClick={() => updateParam('category', isSelected ? 'all' : cat.slug)}
+                  className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all border ${
+                    isSelected
+                      ? 'bg-rose-600 border-rose-600 text-white shadow-xs'
+                      : 'bg-white border-stone-200 text-stone-700 hover:bg-stone-50'
+                  }`}
+                >
+                  {cat.name}
+                </button>
+              );
+            })}
+          </div>
+
           {/* Active Filters Bar */}
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-4">
             <span className="text-xs text-stone-500 font-medium">
               Showing <span className="font-bold text-stone-800">{products.length}</span> of{' '}
               <span className="font-bold text-stone-800">{totalProducts}</span> gifts
             </span>
 
-            {(categoryParam !== 'all' || occasionParam !== 'all' || searchParam) && (
+            {(categoryParam !== 'all' || occasionParam !== 'all' || isGiftParam || searchParam) && (
               <button
                 onClick={clearAllFilters}
                 className="text-xs font-bold text-rose-600 hover:text-rose-700"
@@ -499,7 +546,7 @@ const ShopPage = () => {
 
           {/* Loading State */}
           {loading && !error && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
               {Array.from({ length: 6 }).map((_, i) => (
                 <ProductCardSkeleton key={i} />
               ))}
@@ -530,7 +577,7 @@ const ShopPage = () => {
           {/* Product Cards Grid */}
           {!loading && !error && products.length > 0 && (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
                 {products.map((product) => (
                   <ProductCard key={product._id} product={product} />
                 ))}

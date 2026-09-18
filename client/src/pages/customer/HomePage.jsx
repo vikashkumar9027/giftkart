@@ -154,7 +154,7 @@ const HomePage = () => {
         </div>
 
         {/* Categories Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-5">
           {categories.map((cat) => (
             <CategoryCard key={cat._id} category={cat} />
           ))}
@@ -188,13 +188,13 @@ const HomePage = () => {
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
             {Array.from({ length: 4 }).map((_, i) => (
               <ProductCardSkeleton key={i} />
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
             {featuredProducts.map((product) => (
               <ProductCard key={product._id} product={product} />
             ))}

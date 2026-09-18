@@ -337,7 +337,7 @@ const GiftStudioPage = () => {
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
             {Array.from({ length: 8 }).map((_, i) => (
               <ProductCardSkeleton key={i} />
             ))}
@@ -361,7 +361,7 @@ const GiftStudioPage = () => {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
             {products.map((p) => (
               <ProductCard key={p._id} product={p} />
             ))}
@@ -375,13 +375,13 @@ const GiftStudioPage = () => {
           {/* Birthday Row */}
           {birthdayGifts.length > 0 && (
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-              <div className="bg-gradient-to-r from-amber-500/10 via-rose-500/10 to-transparent p-6 rounded-3xl border border-amber-200/60 flex items-center justify-between">
+              <div className="bg-gradient-to-r from-amber-500/10 via-rose-500/10 to-transparent p-4 sm:p-6 rounded-3xl border border-amber-200/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-xl shadow-md">
+                  <div className="shrink-0 w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-2xl shadow-md">
                     🎂
                   </div>
                   <div>
-                    <h3 className="text-xl font-serif font-bold text-stone-900">
+                    <h3 className="text-lg sm:text-xl font-serif font-bold text-stone-900">
                       Birthday Celebration Specials
                     </h3>
                     <p className="text-xs text-stone-500">
@@ -391,13 +391,13 @@ const GiftStudioPage = () => {
                 </div>
                 <button
                   onClick={() => handleOccasionSelect('Birthday')}
-                  className="px-4 py-2 rounded-full bg-stone-900 hover:bg-black text-white text-xs font-bold transition-all shadow-xs"
+                  className="shrink-0 whitespace-nowrap px-5 py-2.5 rounded-full bg-stone-900 hover:bg-black text-white text-xs font-bold transition-all shadow-xs w-full sm:w-auto text-center"
                 >
                   View All Birthday Gifts →
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
                 {birthdayGifts.map((p) => (
                   <ProductCard key={p._id} product={p} />
                 ))}
@@ -408,13 +408,13 @@ const GiftStudioPage = () => {
           {/* Anniversary Row */}
           {anniversaryGifts.length > 0 && (
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-              <div className="bg-gradient-to-r from-rose-500/10 via-pink-500/10 to-transparent p-6 rounded-3xl border border-rose-200/60 flex items-center justify-between">
+              <div className="bg-gradient-to-r from-rose-500/10 via-pink-500/10 to-transparent p-4 sm:p-6 rounded-3xl border border-rose-200/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 rounded-2xl bg-rose-600 text-white flex items-center justify-center text-xl shadow-md">
+                  <div className="shrink-0 w-12 h-12 rounded-2xl bg-rose-600 text-white flex items-center justify-center text-2xl shadow-md">
                     💍
                   </div>
                   <div>
-                    <h3 className="text-xl font-serif font-bold text-stone-900">
+                    <h3 className="text-lg sm:text-xl font-serif font-bold text-stone-900">
                       Anniversary &amp; Romantic Keepsakes
                     </h3>
                     <p className="text-xs text-stone-500">
@@ -424,13 +424,13 @@ const GiftStudioPage = () => {
                 </div>
                 <button
                   onClick={() => handleOccasionSelect('Anniversary')}
-                  className="px-4 py-2 rounded-full bg-stone-900 hover:bg-black text-white text-xs font-bold transition-all shadow-xs"
+                  className="shrink-0 whitespace-nowrap px-5 py-2.5 rounded-full bg-stone-900 hover:bg-black text-white text-xs font-bold transition-all shadow-xs w-full sm:w-auto text-center"
                 >
                   View All Anniversary Gifts →
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
                 {anniversaryGifts.map((p) => (
                   <ProductCard key={p._id} product={p} />
                 ))}
