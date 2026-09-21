@@ -3,13 +3,28 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    overflow-x: hidden;
+    width: 100%;
+  }
   body {
-    @apply bg-[#FAF8F5] text-stone-800 antialiased font-sans;
+    @apply bg-[#FAF8F5] text-stone-800 antialiased font-sans overflow-x-hidden;
+    width: 100%;
+    min-width: 320px;
   }
 
   h1, h2, h3, .font-serif {
     font-family: 'Playfair Display', Georgia, serif;
   }
+}
+
+/* Hide scrollbar utility for mobile swiping rows */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Custom scrollbar */

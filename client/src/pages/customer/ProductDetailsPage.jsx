@@ -898,7 +898,7 @@ const ProductDetailsPage = () => {
                 src={selectedImage}
                 alt={product.name}
                 onClick={() => setIsZoomed(!isZoomed)}
-                className={`max-h-[60vh] sm:max-h-[70vh] max-w-full object-contain transition-all duration-300 rounded-2xl cursor-pointer ${
+                className={`max-h-[48vh] sm:max-h-[68vh] max-w-full object-contain transition-all duration-300 rounded-2xl cursor-pointer ${
                   isZoomed ? 'scale-150 cursor-zoom-out' : 'scale-100 hover:scale-102 cursor-zoom-in'
                 }`}
               />
@@ -924,7 +924,7 @@ const ProductDetailsPage = () => {
           </div>
 
           {/* Bottom Bar: Thumbnails + Details & Direct Purchase */}
-          <div className="p-4 sm:p-5 border-t border-white/10 bg-black/60 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="p-3 sm:p-5 border-t border-white/10 bg-black/70 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
             {/* Thumbnails Row */}
             {product.images && product.images.length > 1 ? (
               <div className="flex items-center space-x-2.5 overflow-x-auto max-w-full pb-1 scrollbar-none">

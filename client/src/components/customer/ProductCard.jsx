@@ -209,33 +209,33 @@ const ProductCard = ({ product }) => {
           </div>
 
           {/* Action Buttons: Add to Cart Stepper + Direct Buy Now Button */}
-          <div className="grid grid-cols-2 gap-1.5 pt-0.5">
+          <div className="grid grid-cols-2 gap-1 sm:gap-1.5 pt-0.5">
             {/* Cart Stepper or Add Button */}
             {quantityInCart > 0 ? (
-              <div className="flex items-center justify-between bg-rose-50 border border-rose-300 rounded-xl px-1 py-0.5 shadow-xs">
+              <div className="flex items-center justify-between bg-rose-50 border border-rose-300 rounded-xl px-0.5 sm:px-1 py-0.5 shadow-xs min-w-0">
                 <button
                   type="button"
                   onClick={handleDecrement}
-                  className="w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center text-rose-700 hover:bg-rose-200 active:scale-90 transition-all font-bold text-xs cursor-pointer"
+                  className="w-5 h-5 sm:w-7 sm:h-7 flex items-center justify-center text-rose-700 hover:bg-rose-200 active:scale-90 transition-all font-bold text-xs cursor-pointer shrink-0"
                   title="Decrease quantity"
                   aria-label="Decrease quantity"
                 >
-                  <Minus className="w-3 h-3" />
+                  <Minus className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                 </button>
-                <span className="text-xs font-extrabold text-rose-900 select-none">
+                <span className="text-[11px] sm:text-xs font-extrabold text-rose-900 select-none px-0.5">
                   {quantityInCart}
                 </span>
                 <button
                   type="button"
                   onClick={handleIncrement}
                   disabled={quantityInCart >= product.stock}
-                  className={`w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center text-rose-700 hover:bg-rose-200 active:scale-90 transition-all font-bold text-xs cursor-pointer ${
+                  className={`w-5 h-5 sm:w-7 sm:h-7 flex items-center justify-center text-rose-700 hover:bg-rose-200 active:scale-90 transition-all font-bold text-xs cursor-pointer shrink-0 ${
                     quantityInCart >= product.stock ? 'opacity-40 cursor-not-allowed' : ''
                   }`}
                   title={quantityInCart >= product.stock ? 'Stock limit reached' : 'Increase quantity'}
                   aria-label="Increase quantity"
                 >
-                  <Plus className="w-3 h-3" />
+                  <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                 </button>
               </div>
             ) : (
@@ -243,7 +243,7 @@ const ProductCard = ({ product }) => {
                 type="button"
                 onClick={handleAddToCart}
                 disabled={isOutOfStock}
-                className={`flex items-center justify-center space-x-1 px-2 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all shadow-xs border cursor-pointer ${
+                className={`flex items-center justify-center space-x-1 px-1.5 sm:px-2 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all shadow-xs border cursor-pointer min-w-0 ${
                   isOutOfStock
                     ? 'bg-stone-100 text-stone-400 cursor-not-allowed border-stone-200'
                     : 'bg-white hover:bg-rose-50 text-rose-700 border-rose-200 active:scale-95'
@@ -251,7 +251,7 @@ const ProductCard = ({ product }) => {
                 title={isOutOfStock ? 'Product is sold out' : 'Add to Cart'}
               >
                 <ShoppingBag className="w-3 h-3 shrink-0" />
-                <span className="text-[11px] truncate">{isOutOfStock ? 'Sold' : 'Cart'}</span>
+                <span className="text-[10px] sm:text-[11px] truncate font-bold">{isOutOfStock ? 'Sold' : 'Cart'}</span>
               </button>
             )}
 
@@ -260,7 +260,7 @@ const ProductCard = ({ product }) => {
               type="button"
               onClick={handleBuyNow}
               disabled={isOutOfStock}
-              className={`flex items-center justify-center space-x-1 px-2 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer ${
+              className={`flex items-center justify-center space-x-1 px-1.5 sm:px-2 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer min-w-0 ${
                 isOutOfStock
                   ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
                   : 'bg-amber-500 hover:bg-amber-600 active:scale-95 text-stone-950 font-black shadow-amber-500/20'
@@ -268,7 +268,7 @@ const ProductCard = ({ product }) => {
               title={isOutOfStock ? 'Product is sold out' : 'Direct Buy Now'}
             >
               <Zap className="w-3 h-3 shrink-0 fill-stone-950 text-stone-950" />
-              <span className="text-[11px] truncate">Buy Now</span>
+              <span className="text-[10px] sm:text-[11px] truncate font-black">Buy<span className="hidden sm:inline"> Now</span></span>
             </button>
           </div>
         </div>

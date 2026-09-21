@@ -46,15 +46,15 @@ const OccasionSection = () => {
             <Sparkles className="w-4 h-4" />
             <span>Dedicated Gift Options</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-stone-900">
+          <h2 className="text-2xl sm:text-4xl font-serif font-bold text-stone-900">
             Find the Perfect Gift for Every Celebration
           </h2>
-          <p className="mt-2 text-sm text-stone-500 max-w-xl">
+          <p className="mt-2 text-xs sm:text-sm text-stone-500 max-w-xl">
             Celebrate life’s milestone moments with gifts curated specifically for Birthdays, Anniversaries, Weddings &amp; Festivals.
           </p>
         </div>
 
-        <div className="flex items-center space-x-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           <Link
             to="/gifts"
             className="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-rose-50 text-rose-700 hover:bg-rose-100 transition-colors border border-rose-200"

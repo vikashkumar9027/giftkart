@@ -60,68 +60,68 @@ const HomePage = () => {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+          <div className="flex sm:grid sm:grid-cols-4 lg:grid-cols-7 gap-2 sm:gap-3 overflow-x-auto pb-1 scrollbar-none -mx-1 px-1">
             <Link
               to="/gifts?occasion=Birthday"
-              className="group flex flex-col items-center p-3 sm:p-4 rounded-2xl bg-gradient-to-b from-rose-50/50 to-white hover:to-rose-50/80 border border-rose-100 hover:border-rose-300 hover:shadow-md transition-all text-center"
+              className="shrink-0 w-28 sm:w-auto group flex flex-col items-center p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-b from-rose-50/50 to-white hover:to-rose-50/80 border border-rose-100 hover:border-rose-300 hover:shadow-md transition-all text-center"
             >
-              <span className="text-3xl sm:text-4xl mb-2 group-hover:scale-110 transition-transform">🎂</span>
-              <span className="text-xs sm:text-sm font-bold text-stone-900 group-hover:text-rose-600">Birthday Gifts</span>
-              <span className="text-[10px] text-stone-400 mt-0.5">Surprise &amp; cheer</span>
+              <span className="text-2xl sm:text-4xl mb-1 sm:mb-2 group-hover:scale-110 transition-transform">🎂</span>
+              <span className="text-[11px] sm:text-sm font-bold text-stone-900 group-hover:text-rose-600 truncate max-w-full">Birthday Gifts</span>
+              <span className="text-[9px] sm:text-[10px] text-stone-400 mt-0.5 hidden sm:block">Surprise &amp; cheer</span>
             </Link>
 
             <Link
               to="/gifts?occasion=Anniversary"
-              className="group flex flex-col items-center p-3 sm:p-4 rounded-2xl bg-gradient-to-b from-amber-50/50 to-white hover:to-amber-50/80 border border-amber-100 hover:border-amber-300 hover:shadow-md transition-all text-center"
+              className="shrink-0 w-28 sm:w-auto group flex flex-col items-center p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-b from-amber-50/50 to-white hover:to-amber-50/80 border border-amber-100 hover:border-amber-300 hover:shadow-md transition-all text-center"
             >
-              <span className="text-3xl sm:text-4xl mb-2 group-hover:scale-110 transition-transform">💍</span>
-              <span className="text-xs sm:text-sm font-bold text-stone-900 group-hover:text-amber-600">Anniversary</span>
-              <span className="text-[10px] text-stone-400 mt-0.5">Couple keepsakes</span>
+              <span className="text-2xl sm:text-4xl mb-1 sm:mb-2 group-hover:scale-110 transition-transform">💍</span>
+              <span className="text-[11px] sm:text-sm font-bold text-stone-900 group-hover:text-amber-600 truncate max-w-full">Anniversary</span>
+              <span className="text-[9px] sm:text-[10px] text-stone-400 mt-0.5 hidden sm:block">Couple keepsakes</span>
             </Link>
 
             <Link
               to="/gifts?occasion=Wedding"
-              className="group flex flex-col items-center p-3 sm:p-4 rounded-2xl bg-gradient-to-b from-purple-50/50 to-white hover:to-purple-50/80 border border-purple-100 hover:border-purple-300 hover:shadow-md transition-all text-center"
+              className="shrink-0 w-28 sm:w-auto group flex flex-col items-center p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-b from-purple-50/50 to-white hover:to-purple-50/80 border border-purple-100 hover:border-purple-300 hover:shadow-md transition-all text-center"
             >
-              <span className="text-3xl sm:text-4xl mb-2 group-hover:scale-110 transition-transform">💒</span>
-              <span className="text-xs sm:text-sm font-bold text-stone-900 group-hover:text-purple-600">Wedding Gifts</span>
-              <span className="text-[10px] text-stone-400 mt-0.5">Royal &amp; blessed</span>
+              <span className="text-2xl sm:text-4xl mb-1 sm:mb-2 group-hover:scale-110 transition-transform">💒</span>
+              <span className="text-[11px] sm:text-sm font-bold text-stone-900 group-hover:text-purple-600 truncate max-w-full">Wedding Gifts</span>
+              <span className="text-[9px] sm:text-[10px] text-stone-400 mt-0.5 hidden sm:block">Royal &amp; blessed</span>
             </Link>
 
             <Link
               to="/gifts?occasion=Valentine"
-              className="group flex flex-col items-center p-3 sm:p-4 rounded-2xl bg-gradient-to-b from-pink-50/50 to-white hover:to-pink-50/80 border border-pink-100 hover:border-pink-300 hover:shadow-md transition-all text-center"
+              className="shrink-0 w-28 sm:w-auto group flex flex-col items-center p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-b from-pink-50/50 to-white hover:to-pink-50/80 border border-pink-100 hover:border-pink-300 hover:shadow-md transition-all text-center"
             >
-              <span className="text-3xl sm:text-4xl mb-2 group-hover:scale-110 transition-transform">💖</span>
-              <span className="text-xs sm:text-sm font-bold text-stone-900 group-hover:text-pink-600">Romance &amp; Love</span>
-              <span className="text-[10px] text-stone-400 mt-0.5">Roses &amp; pendants</span>
+              <span className="text-2xl sm:text-4xl mb-1 sm:mb-2 group-hover:scale-110 transition-transform">💖</span>
+              <span className="text-[11px] sm:text-sm font-bold text-stone-900 group-hover:text-pink-600 truncate max-w-full">Romance &amp; Love</span>
+              <span className="text-[9px] sm:text-[10px] text-stone-400 mt-0.5 hidden sm:block">Roses &amp; pendants</span>
             </Link>
 
             <Link
               to="/gifts?occasion=Festival"
-              className="group flex flex-col items-center p-3 sm:p-4 rounded-2xl bg-gradient-to-b from-orange-50/50 to-white hover:to-orange-50/80 border border-orange-100 hover:border-orange-300 hover:shadow-md transition-all text-center"
+              className="shrink-0 w-28 sm:w-auto group flex flex-col items-center p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-b from-orange-50/50 to-white hover:to-orange-50/80 border border-orange-100 hover:border-orange-300 hover:shadow-md transition-all text-center"
             >
-              <span className="text-3xl sm:text-4xl mb-2 group-hover:scale-110 transition-transform">🪔</span>
-              <span className="text-xs sm:text-sm font-bold text-stone-900 group-hover:text-orange-600">Diwali &amp; Festive</span>
-              <span className="text-[10px] text-stone-400 mt-0.5">Dry fruits &amp; sweets</span>
+              <span className="text-2xl sm:text-4xl mb-1 sm:mb-2 group-hover:scale-110 transition-transform">🪔</span>
+              <span className="text-[11px] sm:text-sm font-bold text-stone-900 group-hover:text-orange-600 truncate max-w-full">Diwali &amp; Festive</span>
+              <span className="text-[9px] sm:text-[10px] text-stone-400 mt-0.5 hidden sm:block">Dry fruits &amp; sweets</span>
             </Link>
 
             <Link
               to="/gifts?occasion=Personalised"
-              className="group flex flex-col items-center p-3 sm:p-4 rounded-2xl bg-gradient-to-b from-emerald-50/50 to-white hover:to-emerald-50/80 border border-emerald-100 hover:border-emerald-300 hover:shadow-md transition-all text-center"
+              className="shrink-0 w-28 sm:w-auto group flex flex-col items-center p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-b from-emerald-50/50 to-white hover:to-emerald-50/80 border border-emerald-100 hover:border-emerald-300 hover:shadow-md transition-all text-center"
             >
-              <span className="text-3xl sm:text-4xl mb-2 group-hover:scale-110 transition-transform">✂️</span>
-              <span className="text-xs sm:text-sm font-bold text-stone-900 group-hover:text-emerald-600">Personalised</span>
-              <span className="text-[10px] text-stone-400 mt-0.5">Custom engraved</span>
+              <span className="text-2xl sm:text-4xl mb-1 sm:mb-2 group-hover:scale-110 transition-transform">✂️</span>
+              <span className="text-[11px] sm:text-sm font-bold text-stone-900 group-hover:text-emerald-600 truncate max-w-full">Personalised</span>
+              <span className="text-[9px] sm:text-[10px] text-stone-400 mt-0.5 hidden sm:block">Custom engraved</span>
             </Link>
 
             <Link
               to="/gifts"
-              className="group flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl bg-stone-900 hover:bg-rose-600 text-white shadow-md hover:shadow-rose-200 transition-all text-center col-span-2 sm:col-span-2 lg:col-span-1"
+              className="shrink-0 w-28 sm:w-auto group flex flex-col items-center justify-center p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-stone-900 hover:bg-rose-600 text-white shadow-md hover:shadow-rose-200 transition-all text-center"
             >
-              <span className="text-2xl sm:text-3xl mb-1">🎁</span>
-              <span className="text-xs sm:text-sm font-bold">Gift Studio</span>
-              <span className="text-[10px] text-white/70 mt-0.5">Custom Wizard →</span>
+              <span className="text-2xl sm:text-3xl mb-0.5 sm:mb-1">🎁</span>
+              <span className="text-[11px] sm:text-sm font-bold">Gift Studio</span>
+              <span className="text-[9px] sm:text-[10px] text-white/70 mt-0.5 hidden sm:block">Custom Wizard →</span>
             </Link>
           </div>
         </div>

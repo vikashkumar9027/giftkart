@@ -51,7 +51,7 @@ const Navbar = () => {
   return (
     <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-stone-100 shadow-xs transition-all">
       {/* Top Banner Bar - Continuous TV News Channel Marquee */}
-      <div className="bg-gradient-to-r from-rose-800 via-rose-700 to-amber-700 text-white text-xs py-2 overflow-hidden border-b border-rose-900/40 relative select-none">
+      <div className="bg-gradient-to-r from-rose-800 via-rose-700 to-amber-700 text-white text-[11px] sm:text-xs py-1.5 sm:py-2 overflow-hidden border-b border-rose-900/40 relative select-none">
         <div className="flex animate-marquee items-center space-x-8">
           <span className="flex items-center space-x-2 shrink-0 font-medium">
             <span className="text-amber-300 font-extrabold uppercase tracking-wider bg-rose-950/60 px-2 py-0.5 rounded text-[10px]">Breaking</span>
@@ -92,18 +92,18 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Brand Logo */}
-          <Link to="/" className="flex items-center space-x-2.5 group">
-            <div className="w-10 h-10 rounded-2xl bg-rose-600 flex items-center justify-center text-white shadow-md shadow-rose-200 group-hover:scale-105 transition-transform">
-              <Gift className="w-5 h-5" />
+          <Link to="/" className="flex items-center space-x-2 sm:space-x-2.5 group shrink-0">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-rose-600 flex items-center justify-center text-white shadow-md shadow-rose-200 group-hover:scale-105 transition-transform">
+              <Gift className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div className="flex flex-col">
-              <span className="text-2xl font-serif font-bold tracking-tight text-stone-900 group-hover:text-rose-700 transition-colors">
+              <span className="text-xl sm:text-2xl font-serif font-bold tracking-tight text-stone-900 group-hover:text-rose-700 transition-colors">
                 GiftNest
               </span>
-              <span className="text-[10px] tracking-widest uppercase text-stone-400 font-semibold -mt-1">
+              <span className="text-[9px] sm:text-[10px] tracking-widest uppercase text-stone-400 font-semibold -mt-0.5 sm:-mt-1">
                 Curated Surprises
               </span>
             </div>
