@@ -25,7 +25,7 @@ const CategoryCard = ({ category }) => {
         <span className="text-[9px] sm:text-[11px] uppercase tracking-wider font-semibold text-rose-300 bg-rose-950/70 backdrop-blur-xs px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full inline-block truncate max-w-full">
           {category.productCount ? `${category.productCount} Gifts` : 'Collection'}
         </span>
-        <h3 className="text-base sm:text-xl font-serif font-bold text-white group-hover:text-rose-200 transition-colors line-clamp-1">
+        <h3 className="text-sm sm:text-xl font-serif font-bold text-white group-hover:text-rose-200 transition-colors line-clamp-2 leading-tight">
           {category.name}
         </h3>
         <p className="text-[11px] sm:text-xs text-stone-300 line-clamp-2 leading-relaxed hidden sm:block">
